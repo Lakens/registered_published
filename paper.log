@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.20)  21 MAY 2023 19:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.20)  21 MAY 2023 19:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -703,7 +703,7 @@ Underfull \vbox (badness 1048) has occurred while \output is active []
 Underfull \vbox (badness 1215) has occurred while \output is active []
 
 [7]
-Underfull \vbox (badness 5578) has occurred while \output is active []
+Underfull \vbox (badness 1509) has occurred while \output is active []
 
 [8] (./paper.aux) ) 
 Here is how much of TeX's memory you used:
@@ -715,10 +715,10 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  89i,11n,90p,2023b,546s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (8 pages, 94285 bytes).
+Output written on paper.pdf (8 pages, 94454 bytes).
 PDF statistics:
- 231 PDF objects out of 1000 (max. 8388607)
- 212 compressed objects within 3 object streams
+ 232 PDF objects out of 1000 (max. 8388607)
+ 213 compressed objects within 3 object streams
  58 named destinations out of 1000 (max. 500000)
  65 words of extra memory for PDF output out of 10000 (max. 10000000)
 

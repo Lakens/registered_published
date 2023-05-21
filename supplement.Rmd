@@ -15,7 +15,7 @@ affiliation:
   - id            : "1"
     institution   : "Eindhoven University of Technology"
 authornote: |
-  This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research. The computationally reproducible version of this manuscript, are available at https://github.com/Lakens/xxx. 
+  This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research. The computationally reproducible version of this manuscript is available at https://github.com/Lakens/registered_published and additional materials on https://osf.io/8uqfb/.
 abstract: |
   This supplement provides additional details on the classification of registrations as research studies or not, the classification of studies as published or not, additional analyses about how extensive preregistrations were, and a more fine-grained overview of reasons researchers provided not to publish their study. 
   
