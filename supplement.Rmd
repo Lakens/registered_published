@@ -1,0 +1,162 @@
+---
+title             : "Supplement to: An Inception Cohort Study Quantifying How Many Registered Studies are Published."
+shorttitle        : "SUPPLEMENT"
+author: 
+  - name          : "Eline Ensinck"
+    affiliation   : "1"
+    corresponding : no    # Define only one corresponding author
+    email         : "e.n.f.ensinck@student.tue.nl"  
+  - name          : "Daniël Lakens"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Den Dolech 1, 5600MB Eindhoven, The Netherlands"
+    email         : "D.Lakens@tue.nl"
+affiliation:
+  - id            : "1"
+    institution   : "Eindhoven University of Technology"
+authornote: |
+  This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research. The computationally reproducible version of this manuscript, are available at https://github.com/Lakens/xxx. 
+abstract: |
+  This supplement provides additional details on the classification of registrations as research studies or not, the classification of studies as published or not, additional analyses about how extensive preregistrations were, and a more fine-grained overview of reasons researchers provided not to publish their study. 
+  
+keywords          : "Publication Bias; File-Drawer; Registry; Research Waste"
+wordcount         : "1111"
+bibliography      : ["RegistriesPublication.bib"]
+floatsintext      : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : no
+mask              : no
+draft             : no
+figsintext        : yes
+class             : "jou, a4paper"
+output            : papaja::apa6_pdf
+link-citations    : true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r load packages and data, include = FALSE}
+# Load packages ----
+
+library(readxl)
+library(dplyr)
+library(papaja)
+library(binom)
+
+# Load datafile ----
+
+registration_data <- read_excel("registration_data.xlsx")
+
+registration_data_included <- registration_data[which(registration_data$no_research_study == 0 & registration_data$withdrawn == 0 & registration_data$no_unique_study == 0 & registration_data$no_preregistration == 0 & registration_data$registered_report == 0 & registration_data$replication_project == 0), ]
+
+```
+
+# Details on Classifying Registrations as a Research Study
+
+It can be challenging to determine whether a registration was performed with the goal to publish a study. Sometimes, the description of the preregistration or project page explicitly revealed that a registration was not an actual research study (for instance, when the group number of the course was shared), or it explicitly linked to a final publication. When it was not clear from the description on the OSF if the registration concerned an actual research study, we searched for information about the author(s) on the OSF. If the person who registered the project had various activity points and projects on the OSF, we assumed this person was an active researcher, and not a student. If someone had used the OSF at most a few times since 2017, and did not provide any personal information, we tried to determine if the user was a researcher by searching for scientific publications or membership of research groups (e.g. profiles on institutional websites). If such information could be found, the registration was coded as an actual research study. If such information could not be found, the registration was marked as “no research study” (e.g., it was assumed to be a student assignment). In the case of multiple authors, it is possible that only a subgroup of the authors could be found. If only one of the authors seemed to be a real researcher, we assumed that the registration was part of a student project, where the researcher supervised the other users of the OSF. However, if more than one author seemed to be an actual researcher, the registration was marked as an actual research study. These decisions necessarily introduce some arbitrariness in whether a study was intended to be published or not, and therefore we explored whether researchers intended to publish a study when we emailed researchers to follow up on unpublished registrations (see below). 
+
+We observed quite some variation in the amount of detail in the preregistrations that we examined. We therefore decided to code the ‘quality’ of the registrations based on the information written in the registration (but not in any associated files, such as uploaded text documents). We labeled all registrations that were empty as 1 (which means it was not clear what the study was about based on the registration) and all registrations that had a minimal description as 2 (this means either a detailed title or small remark about the content of the study was included). If there was a somewhat more detailed but short description about the study, the registration was coded as 3 and finally, all registrations that included a detailed description were coded as 4. In this way, we could compare the quality of the preregistrations in both groups and check for possible differences that could lead to different publication rates. 
+
+# Details on Classifying Studies as Published or Not
+
+```{r publicationtype}
+# Reason not published ----------------------------------------------------
+
+# It matters if this is done on all registrations we emailed for, or just the ones we ended up including. 
+
+publicationtype <- registration_data_included %>% group_by(classification) %>% summarise(journal = sum(journal_article_after_email == 1), preprint = sum(grey_literature_after_email == 1), thesis = sum(grey_literature_after_email == 2), poster = sum(grey_literature_after_email == 3), report = sum(grey_literature_after_email == 4), conference = sum(grey_literature_after_email == 5))
+publicationtype[3,] <- publicationtype[1,] + publicationtype[2,]
+publicationtype <- as.data.frame(publicationtype[,-1])
+rownames(publicationtype) <- c("Manually Opened", "Automatically Opened", "Total")
+colnames(publicationtype) <- c("Journal Article", "Preprint", "PhD Thesis", "Poster", "Report", "Conference Proceeding")
+
+apa_table(t(publicationtype), digits = 0, caption = "Type of object that matched the registration for all registrations that were publicly shared")
+
+```
+
+For each registration, we first searched for the combination of the title of the registration and the names of the authors in Google Scholar and examined the search results. We considered the registration published if it appeared as a journal article, preprint, PhD thesis in a repository, an online report, or conference proceedings. The frequency of each publication type is provided in Table \@ref(tab:publicationtype). When a publication with a similar title was identified, the publication was downloaded and we determined if the publication matched the topic of the registration, was published after the registration date on the OSF, and the OSF users on the registration at least partly overlapped with the authors of the publication. We also searched the publication for a link to an OSF project page that was associated with the registration. If the publication indeed seemed to be about the same topic and was published after the registration date on the OSF, the study was marked as publicly shared. 
+
+Because titles of the registrations and papers often do not match we continued our search based on the names of the OSF users. For each user associated with a registration we retrieved a list of their publications and scanned through their publications after the registration date. If a paper similar to the topic of the registration or in collaboration with some of the other OSF users associated with the registration was found, we again aimed to determine of the publication matched the registration. Whenever we failed to find a publication that seemed to be related to a registration the registration was marked as “not publicly shared”.
+
+Our use of the term ‘published’ differs from another inception cohort study in psychology [@franco_publication_2014] who limited 'publication' to journal articles and book chapters. We believe the rise of preprints and stable repositories warrants a broader definition of what it means to publish the results of a study, and especially preprints can provide an important outlet for studies that a researcher might decide not to submit to a scientific journal. 
+
+When searching through the literature, different types of publications were found. To get an idea of the type of publications found within this sample, we distinguished between a journal article, preprint, PhD thesis, poster, draft/report, and conference paper. An overview is given in table xxx. 
+
+# Extensiveness of the details in registrations
+
+```{r table-quality, echo = FALSE}
+
+quality_reg <- as.data.frame.matrix(table(registration_data_included$classification, registration_data_included$quality_of_registration))
+rownames(quality_reg) <- c("Manually Opened", "Automatically Opened")
+colnames(quality_reg) <- c("Empty",	"Minimal", "Short", "Extensive")
+
+apa_table(quality_reg, digits = 0, caption = "Classification of the extensiveness of registrations.")
+
+```
+
+Because of large differences were observed between the level of detail provided in a registration, and because the level of detail influences the probability that the registration can be matched to a publication of the study, we coded how extensive the registrations were. `r round(100*quality_reg[1,1]/sum(quality_reg[1,]),0)`% of all registrations in the manually opened registrations and `r round(100*quality_reg[2,1]/sum(quality_reg[2,]),0)`% of all registrations in the automatically opened registration were empty, so that it was not clear what the study was about purely from the registration. At least a minimal description was given for `r round(100*quality_reg[1,2]/sum(quality_reg[1,]),0)`% of the registrations in the manually opened registrations and `r round(100*quality_reg[2,2]/sum(quality_reg[2,]),0)`% in the automatically opened registration, meaning that although very brief, there were some details about the content of the study (e.g., a descriptive title). A more detailed short description was provided in `r round(100*quality_reg[1,3]/sum(quality_reg[1,]),0)`% of the cases in the manually opened registrations and `r round(100*quality_reg[2,3]/sum(quality_reg[2,]),0)`% of the cases in the automatically opened registration. Finally, most registrations seem to fall in the last group of extensive registrations (`r round(100*quality_reg[1,4]/sum(quality_reg[1,]),0)`% and `r round(100*quality_reg[2,4]/sum(quality_reg[2,]),0)`% in the manually opened registrations and the automatically opened registration, respectively). These results are summarized in Table \@ref(tab:table-quality). The fact that similar percentages are found in manually opened registrations and the automatically opened registration shows that the level of details in the registrations (and thus that of the research studies) does not differ much between the two groups.
+
+# Fine-grained categorization of reasons for non-publication
+
+In the main text we have classified the reasons provided by researchers not to publish in five categories. Below, we provide a more fine-grained classification consisting of 15 categories. 
+
+```{r reasons_non_publish}
+# Reason not published ----------------------------------------------------
+
+# It matters if this is done on all registrations we emailed for, or just the ones we ended up including. 
+
+reasons_table <- registration_data_included %>% group_by(classification) %>% summarise(a = sum(reason_if_unpublished == 1), b = sum(reason_if_unpublished == 2), c = sum(reason_if_unpublished == 3), d = sum(reason_if_unpublished == 4), e = sum(reason_if_unpublished == 5), f = sum(reason_if_unpublished == 6), h = sum(reason_if_unpublished == 7), i = sum(reason_if_unpublished == 8), j = sum(reason_if_unpublished == 9), k = sum(reason_if_unpublished == 10), l = sum(reason_if_unpublished == 11), m = sum(reason_if_unpublished == 12), n = sum(reason_if_unpublished == 13), o = sum(reason_if_unpublished == 14), p = sum(reason_if_unpublished == 15), q = sum(reason_if_unpublished == 16))
+reasons_table[3,] <- reasons_table[1,] + reasons_table[2,]
+reasons_table <- as.data.frame(reasons_table[,-1])
+rownames(reasons_table) <- c("Manually Opened", "Automatically Opened", "Total")
+colnames(reasons_table) <- c("No significant results", "Left academia", "Paper rejected", "Failed replication", "Unfinished study", "Educational project", "Pilot", "Switched job / research directions", "Shared with funder (not the goal to publish)", "Lack of time / busy with other projects", "Conflicting / unclear results", "Flaws in procedure", "Still in progress", "Reviewers requested it", "Extra study (no priority)", "Health issues")
+
+apa_table(t(reasons_table), digits = 0, caption = "Summary of main reasons researchers self-reported to not publish registered studies.", note = "Only the first or main reason was coded whenever respondents gave multiple reasons.")
+
+```
+
+```{r reasons_open_project, include = FALSE}
+
+reasons_open_project_table <- registration_data %>% summarise(open_science = sum(motivation_opening_project == 1 | motivation_opening_project == 6 | motivation_opening_project == 7), technical_issues = sum(motivation_opening_project == 2 | motivation_opening_project == 4), other = sum(motivation_opening_project == 3 | motivation_opening_project == 5))
+reasons_open_project_table <- as.data.frame(reasons_open_project_table)
+rownames(reasons_open_project_table) <- c("Reasons")
+colnames(reasons_open_project_table) <- c("Open Science", "Technical Issues", "Other")
+
+reasons_closed_project_table <- registration_data %>% summarise(results = sum(motivation_not_opening_project == 1), publication_process = sum(motivation_not_opening_project == 2 | motivation_not_opening_project == 10), no_new_information = sum(motivation_not_opening_project == 4 | motivation_not_opening_project == 5 | motivation_not_opening_project == 7 | motivation_not_opening_project == 8 | motivation_not_opening_project == 9 | motivation_not_opening_project == 14), planning = sum(motivation_not_opening_project == 11 | motivation_not_opening_project == 6), technical_issues = sum(motivation_not_opening_project == 12 | motivation_not_opening_project == 13), forgotten = sum(motivation_not_opening_project == 3), other = sum(motivation_not_opening_project == 15 | motivation_not_opening_project == 16))
+reasons_closed_project_table <- as.data.frame(reasons_closed_project_table)
+rownames(reasons_closed_project_table) <- c("Reasons")
+colnames(reasons_closed_project_table) <- c("Results", "Publication Process", "No New Information", "Planning", "Technical Issues", "Forgotten", "Other")
+reasons_closed_project_table
+
+
+```
+
+```{r reasonopen} 
+apa_table(reasons_open_project_table, digits = 0, caption = "Summary of main reasons researchers self-reported to open their OSF project page.")
+```
+
+```{r reasonclosed} 
+apa_table(reasons_closed_project_table, digits = 0, caption = "Summary of main reasons researchers self-reported to not open their OSF project page.")
+```
+
+\newpage
+
+# Motivations for opening or not opening OSF project pages
+
+We were also interested in the motivation to either make the associated OSF project public or keep it private. While most researchers (79%) mentioned a motivation to practice open science as the primary reason for opening an OSF project (see Table \@ref(tab:reasonopen)), more diverse reasons were given for keeping the OSF project closed (see Table \@ref(tab:reasonclosed)). Many researchers (36%) mentioned that the associated project does not contain any new or relevant information, so peers would not benefit if the project was open. The second most common reason not to open the project (26%) was that researchers simply forgot to open the project. Others made the moment to open the project dependent on the publication of the study (14%), and technical issues (e.g., a lack of familiarity or misunderstanding about the OSF) were reasons to both open a project and to keep it private (in 8% and 10% of the cases, respectively). 
+
+# Researchers
+
+Some researchers appeared in our database multiple times. This is an indication of the use of the OSF by early adopters in the years up to 2017. One author appeared three times, and 3 other researchers appeared 2 times. Although each registration can be published or not, there is the possibility of some dependencies in the dataset because the probability that these authors publish a paper might be correlated across registrations. 
+
+# References
+
+<!-- # interlinepenalty prevents freak error when a hyperlink in reference breaks across a page -->
+\begingroup
+\interlinepenalty = 10000 
+
+
+<div id="refs" custom-style="Bibliography"></div>
+\endgroup
