@@ -1,4 +1,4 @@
-# An Inception Cohort Study Quantifying How Many Registered Studiesare Published.
+# An Inception Cohort Study Quantifying How Many Registered Studies are Published.
 
 This is a repository for the reproducible manuscript by Eline Ensink and Daniel Lakens. 
 
