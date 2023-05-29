@@ -59,29 +59,6 @@
   \let\oldsubparagraph\subparagraph
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
-  \fi
-  % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \ifLuaTeX
 \usepackage[bidi=basic]{babel}
 \else
@@ -155,7 +132,6 @@
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
-\keywords{Publication Bias; File-Drawer; Registry; Research Waste\newline\indent Word count: 1111}
 \usepackage{dblfloatfix}
 
 
@@ -170,7 +146,6 @@
   pdftitle={Supplement to: An Inception Cohort Study Quantifying How Many Registered Studies are Published.},
   pdfauthor={Eline Ensinck1 \& Daniël Lakens1},
   pdflang={en-EN},
-  pdfkeywords={Publication Bias; File-Drawer; Registry; Research Waste},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
@@ -203,7 +178,7 @@ This supplement provides additional details on the classification of registratio
 \hypertarget{details-on-classifying-registrations-as-a-research-study}{%
 \section{Details on Classifying Registrations as a Research Study}\label{details-on-classifying-registrations-as-a-research-study}}
 
-It can be challenging to determine whether a registration was performed with the goal to publish a study. Sometimes, the description of the registration or project page explicitly revealed that a registration was not an actual research study (for instance, when the group number of the course was shared), or it explicitly linked to a final publication. When it was not clear from the description on the OSF if the registration concerned an actual research study, we searched for information about the researcher(s) on the OSF. If the person who registered the project had various activity points and projects on the OSF, we assumed this person was an active researcher, and not a student. If someone had used the OSF at most a few times since 2017, and did not provide any personal information, we tried to determine if the user was a researcher by searching for scientific publications or membership of research groups (e.g.~profiles on institutional websites). If such information could be found, the registration was coded as an actual research study. If such information could not be found, the registration was marked as ``no research study'' (e.g., it was assumed to be a student assignment). In the case of multiple researchers, it is possible that only a subgroup of the researchers could be found. If only one of the researchers seemed to be a real researcher, we assumed that the registration was part of a student project, where the researcher supervised the other users of the OSF. However, if more than one researcher seemed to be an actual researcher, the registration was marked as an actual research study. These decisions necessarily introduce some arbitrariness in whether a study was intended to be published or not, and therefore we explored whether researchers intended to publish a study when we emailed researchers to follow up on unpublished registrations (see below).
+It can be challenging to determine whether a registration was performed with the goal to publish a study. Sometimes, the description of the registration or project page explicitly revealed that a registration was not an actual research study (for instance, when the group number of the course was shared), or it explicitly linked to a final publication. When it was not clear from the description on the OSF if the registration concerned an actual research study, we searched for information about the researcher(s) on the OSF. If the person who registered the project had various activity points and projects on the OSF, we assumed this person was an active researcher, and not a student. If someone had used the OSF at most a few times since 2017, and did not provide any personal information, we tried to determine if the user was a researcher by searching for scientific publications or membership of research groups (e.g.~profiles on institutional websites). If such information could be found, the registration was coded as an actual research study. If such information could not be found, the registration was marked as ``no research study'' (e.g., it was assumed to be a student assignment). In the case of multiple researchers, it is possible that only a subgroup of the researchers could be found. If only one of the researchers seemed to be a real researcher, we assumed that the registration was part of a student project, where the researcher supervised the other users of the OSF. However, if more than one researcher seemed to be an actual researcher, the registration was marked as an actual research study. These decisions necessarily introduce some arbitrariness in whether a study was intended to be published or not, and therefore we explored whether researchers intended to publish a study when we emailed researchers to follow up on unpublished registrations (see below). As we did not email researchers when we felt confident the registration was not a research study, and as we did not receive replies from all researchers we emailed, the final classification has remaining uncertainty (see the discussion).
 
 We observed quite some variation in the amount of detail in the registrations that we examined. We therefore decided to code the `quality' of the registrations based on the information written in the registration (but not in any associated files, such as uploaded text documents). We labeled all registrations that were empty as 1 (which means it was not clear what the study was about based on the registration) and all registrations that had a minimal description as 2 (this means either a detailed title or small remark about the content of the study was included). If there was a somewhat more detailed but short description about the study, the registration was coded as 3 and finally, all registrations that included a detailed description were coded as 4. In this way, we could compare the quality of the registrations in both groups and check for possible differences that could lead to different publication rates.
 
@@ -215,7 +190,7 @@ We observed quite some variation in the amount of detail in the registrations th
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:publicationtype}Type of object that matched the registration for all registrations that were publicly shared}
+\caption{\label{tab:publicationtype}Type of document that matched the registration for all registrations that were publicly shared}
 
 \begin{tabular}{llll}
 \toprule
@@ -237,11 +212,7 @@ Conference Proceeding & 0 & 0 & 0\\
 
 For each registration, we first searched for the combination of the title of the registration and the names of the researchers in Google Scholar and examined the search results. We considered the registration published if it appeared as a journal article, preprint, PhD thesis in a repository, an online report, or conference proceedings. The frequency of each publication type is provided in Table \ref{tab:publicationtype}. When a publication with a similar title was identified, the publication was downloaded and we determined if the publication matched the topic of the registration, was published after the registration date on the OSF, and the OSF users on the registration at least partly overlapped with the researchers of the publication. We also searched the publication for a link to an OSF project page that was associated with the registration. If the publication indeed seemed to be about the same topic and was published after the registration date on the OSF, the study was marked as publicly shared.
 
-Because titles of the registrations and papers often do not match we continued our search based on the names of the OSF users. For each user associated with a registration we retrieved a list of their publications and scanned through their publications after the registration date. If a paper similar to the topic of the registration or in collaboration with some of the other OSF users associated with the registration was found, we again aimed to determine of the publication matched the registration. Whenever we failed to find a publication that seemed to be related to a registration the registration was marked as ``not publicly shared''.
-
-Our use of the term `published' differs from another inception cohort study in psychology (\protect\hyperlink{ref-franco_publication_2014}{Franco, Malhotra, \& Simonovits, 2014}) who limited `publication' to journal articles and book chapters. We believe the rise of preprints and stable repositories warrants a broader definition of what it means to publish the results of a study, and especially preprints can provide an important outlet for studies that a researcher might decide not to submit to a scientific journal.
-
-When searching through the literature, different types of publications were found. To get an idea of the type of publications found within this sample, we distinguished between a journal article, preprint, PhD thesis, poster, draft/report, and conference paper. An overview is given in table xxx.
+Because titles of the registrations and papers often do not match we continued our search based on the names of the OSF users. For each user associated with a registration we retrieved a list of their publications and scanned through their publications after the registration date. If a document similar to the topic of the registration or in collaboration with some of the other OSF users associated with the registration was found, we again aimed to determine if the publication matched the registration. Whenever we failed to find a publication that seemed to be related to a registration the registration was marked as ``not publicly shared'' in any of the document types outlined above.
 
 \hypertarget{extensiveness-of-the-details-in-registrations}{%
 \section{Extensiveness of the details in registrations}\label{extensiveness-of-the-details-in-registrations}}
@@ -267,19 +238,19 @@ Automatically Opened & 13 & 23 & 6 & 39\\
 
 \end{table*}
 
-Because of large differences were observed between the level of detail provided in a registration, and because the level of detail influences the probability that the registration can be matched to a publication of the study, we coded how extensive the registrations were. 18\% of all registrations in the manually opened registrations and 16\% of all registrations in the automatically opened registration were empty, so that it was not clear what the study was about purely from the registration. At least a minimal description was given for 36\% of the registrations in the manually opened registrations and 28\% in the automatically opened registration, meaning that although very brief, there were some details about the content of the study (e.g., a descriptive title). A more detailed short description was provided in 10\% of the cases in the manually opened registrations and 7\% of the cases in the automatically opened registration. Finally, most registrations seem to fall in the last group of extensive registrations (36\% and 48\% in the manually opened registrations and the automatically opened registration, respectively). These results are summarized in Table \ref{tab:table-quality}. The fact that similar percentages are found in manually opened registrations and the automatically opened registration shows that the level of details in the registrations (and thus that of the research studies) does not differ much between the two groups.
+Because large differences were observed between the level of detail provided in a registration, and because the level of detail influences the probability that the registration can be matched to a publication of the study, we coded how extensive the registrations were. 18\% of all registrations in the manually opened registrations and 16\% of all registrations in the automatically opened registration were empty, so that it was not clear what the study was about purely from the registration. At least a minimal description was given for 36\% of the registrations in the manually opened registrations and 28\% in the automatically opened registration, meaning that although very brief, there were some details about the content of the study (e.g., a descriptive title). A more detailed short description was provided in 10\% of the cases in the manually opened registrations and 7\% of the cases in the automatically opened registration. Finally, most registrations seem to fall in the last group of extensive registrations (36\% and 48\% in the manually opened registrations and the automatically opened registration, respectively). These results are summarized in Table \ref{tab:table-quality}. The fact that similar percentages are found in manually opened registrations and the automatically opened registration shows that the level of detail in the registrations does not differ substantially between the two groups. Therefore, the difference in probability that we found a registration that was classified as manually opened, compared to classifications that were automatically opened, is not explained by a difference in the level of detail of the registrations.
 
 \hypertarget{fine-grained-categorization-of-reasons-for-non-publication}{%
 \section{Fine-grained categorization of reasons for non-publication}\label{fine-grained-categorization-of-reasons-for-non-publication}}
 
-In the main text we have classified the reasons provided by researchers not to publish in five categories. Below, we provide a more fine-grained classification consisting of 15 categories.
+In the main text we have classified the reasons that researchers provided to not to publish their registered study in five categories. Below in Table \ref{tab:reasons-non-publish} we provide a more fine-grained classification consisting of 15 categories.
 
 \begin{table*}[tbp]
 
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:reasons_non_publish}Summary of main reasons researchers self-reported to not publish registered studies.}
+\caption{\label{tab:reasons-non-publish}Summary of main reasons researchers self-reported to not publish registered studies.}
 
 \begin{tabular}{llll}
 \toprule
@@ -359,28 +330,12 @@ Reasons & 1 & 6 & 15 & 4 & 4 & 11 & 2\\
 \hypertarget{motivations-for-opening-or-not-opening-osf-project-pages}{%
 \section{Motivations for opening or not opening OSF project pages}\label{motivations-for-opening-or-not-opening-osf-project-pages}}
 
-We were also interested in the motivation to either make the associated OSF project public or keep it private. While most researchers (79\%) mentioned a motivation to practice open science as the primary reason for opening an OSF project (see Table \ref{tab:reasonopen}), more diverse reasons were given for keeping the OSF project closed (see Table \ref{tab:reasonclosed}). Many researchers (36\%) mentioned that the associated project does not contain any new or relevant information, so peers would not benefit if the project was open. The second most common reason not to open the project (26\%) was that researchers simply forgot to open the project. Others made the moment to open the project dependent on the publication of the study (14\%), and technical issues (e.g., a lack of familiarity or misunderstanding about the OSF) were reasons to both open a project and to keep it private (in 8\% and 10\% of the cases, respectively).
+We were also interested in the motivation to either make the associated OSF project public or keep it private. While most researchers (79\%) mentioned a motivation to practice open science as the primary reason for opening an OSF project (see Table \ref{tab:reasonopen}), more diverse reasons were given for keeping the OSF project closed (see Table \ref{tab:reasonclosed}). Many researchers (36\%) mentioned that the associated project does not contain any new or relevant information, so peers would not benefit if the project was opened. The second most common reason not to open the project (26\%) was that researchers simply forgot. Others made the moment to open the project dependent on the publication of the study (14\%), and technical issues (e.g., a lack of familiarity or misunderstanding about the OSF) were reasons to both open a project and to keep it private (in 8\% and 10\% of the cases, respectively).
 
 \hypertarget{researchers}{%
 \section{Researchers}\label{researchers}}
 
-Some researchers appeared in our database multiple times. This is an indication of the use of the OSF by early adopters in the years up to 2017. One researcher appeared three times, and 3 other researchers appeared 2 times. Although each registration can be published or not, there is the possibility of some dependencies in the dataset because the probability that these authors publish a paper might be correlated across registrations.
-
-\hypertarget{references}{%
-\section{References}\label{references}}
-
-\begingroup
-
-\interlinepenalty = 10000
-
-\hypertarget{refs}{}
-\begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-franco_publication_2014}{}}%
-Franco, A., Malhotra, N., \& Simonovits, G. (2014). Publication bias in the social sciences: {Unlocking} the file drawer. \emph{Science}, \emph{345}(6203), 1502--1505. \url{https://doi.org/10.1126/SCIENCE.1255484}
-
-\end{CSLReferences}
-
-\endgroup
+Some researchers appeared in our database multiple times. This is an indication of the use of the OSF by early adopters in the years up to 2017. After excluding multiple registrations for the same research project, one researcher appeared three times, and three other researchers appeared two times. Although each registration can be published or not, there is the possibility of some dependencies in the data set because the probability that these authors publish a paper might be correlated across registrations.
 
 
 \end{document}
