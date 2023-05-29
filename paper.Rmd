@@ -1,6 +1,6 @@
 ---
 title             : "An Inception Cohort Study Quantifying How Many Registered Studies are Published."
-shorttitle        : "QUANTIFYING PUBLISHED REGISTERED STUDIES"
+shorttitle        : "QUANTIFYING THE FILEDRAWER FOR REGISTERED STUDIES"
 author: 
   - name          : "Eline Ensinck"
     affiliation   : "1"
@@ -17,7 +17,7 @@ affiliation:
 authornote: |
   This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research. The computationally reproducible version of this manuscript is available at https://github.com/Lakens/registered_published and additional materials on https://osf.io/8uqfb/. We would like the thanks Stephen Lindsay, Cristian Mesquida Caldentey, and Henry Wyneken for feedback on a draft. 
 abstract: |
-  We quantified how many studies registered on the Open Science Framework (OSF) up to November 2017 are performed but never shared. Examining a sample of 315 registrations, of which 169 were research studies, we found that 104 (62%) were published. We estimate that 5550 out of 9544 (58%) of registrations on the OSF are published within at least 4 years. Researchers use registries to make unpublished studies public, and the OSF policy to automatically make registrations public substantially increases the number of performed studies that become known to the scientific community. In responses to emails asking researchers why studies remained unpublished, logistical issues (e.g., lack of time, researchers changing jobs) was the most common reason, followed by null results and rejections during peer review. Our study shows that a substantial amount of data that researchers collect is never publicly shared. 
+  We quantified how many studies registered on the Open Science Framework (OSF) up to November 2017 are performed but never shared. Examining a sample of 315 registrations, of which 169 were research studies, we found that 104 (62%) were published. We estimate that 5550 out of 9544 (58%) registrations on the OSF are published within at least 4 years. Researchers use registries to make unpublished studies public, and the OSF policy to automatically make registrations public substantially increases the number of performed studies that become known to the scientific community. In responses to emails asking researchers why studies remained unpublished, logistical issues (e.g., lack of time, researchers changing jobs) was the most common reason, followed by null results and rejections during peer review. Our study shows that a substantial amount of data that researchers collect is never publicly shared. 
   
 keywords          : "File Drawer; Registries; Research Waste; Scientific Publication"
 wordcount         : "4501"

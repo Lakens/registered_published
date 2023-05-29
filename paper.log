@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.26)  29 MAY 2023 18:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.26)  29 MAY 2023 21:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -724,7 +724,7 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  89i,11n,90p,1965b,546s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (8 pages, 93477 bytes).
+Output written on paper.pdf (8 pages, 93525 bytes).
 PDF statistics:
  243 PDF objects out of 1000 (max. 8388607)
  224 compressed objects within 3 object streams
