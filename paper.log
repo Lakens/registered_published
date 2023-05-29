@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.20)  21 MAY 2023 20:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.26)  29 MAY 2023 10:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **paper.tex
 (./paper.tex
 LaTeX2e <2022-11-01> patch level 1
-L3 programming layer <2023-05-15> (c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/apa6/apa6.cls
+L3 programming layer <2023-05-22> (c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/apa6/apa6.cls
 Document Class: apa6 2020/01/13 v2.34 APA formatting (6th edition)
 (c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
@@ -419,7 +419,7 @@ Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 Failed to patch abstract.
 Failed to patch title.
 (c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xpatch/xpatch.sty (c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2023-05-15 L3 programming layer (loader) 
+Package: expl3 2023-05-22 L3 programming layer (loader) 
 (c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2023-04-19 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count295
@@ -696,26 +696,32 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 [1{c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}
 
 
-] [2] [3] [4] [5] [6]
+] [2] [3]
+Underfull \vbox (badness 1400) has occurred while \output is active []
+
+
+Underfull \vbox (badness 1400) has occurred while \output is active []
+
+[4] [5] [6]
 Underfull \vbox (badness 1215) has occurred while \output is active []
 
-[7]
-Underfull \vbox (badness 5578) has occurred while \output is active []
 
-[8] (./paper.aux) ) 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+[7] [8] (./paper.aux) ) 
 Here is how much of TeX's memory you used:
- 15927 strings out of 478057
- 264653 string characters out of 5838696
- 1874845 words of memory out of 5000000
- 35708 multiletter control sequences out of 15000+600000
+ 15930 strings out of 477998
+ 264728 string characters out of 5837734
+ 1875779 words of memory out of 5000000
+ 35767 multiletter control sequences out of 15000+600000
  566428 words of font info for 116 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 89i,11n,90p,2020b,546s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,11n,90p,1979b,546s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (8 pages, 94384 bytes).
+Output written on paper.pdf (8 pages, 94953 bytes).
 PDF statistics:
- 231 PDF objects out of 1000 (max. 8388607)
- 212 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 500000)
+ 238 PDF objects out of 1000 (max. 8388607)
+ 219 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 500000)
  65 words of extra memory for PDF output out of 10000 (max. 10000000)
 
