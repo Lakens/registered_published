@@ -77,6 +77,127 @@ For each registration, we first searched for the combination of the title of the
 
 Because titles of the registrations and papers often do not match we continued our search based on the names of the OSF users. For each user associated with a registration we retrieved a list of their publications and scanned through their publications after the registration date. If a document similar to the topic of the registration or in collaboration with some of the other OSF users associated with the registration was found, we again aimed to determine if the publication matched the registration. Whenever we failed to find a publication that seemed to be related to a registration the registration was marked as “not publicly shared” in any of the document types outlined above.  
 
+# Details on Extrapolating to the Population
+
+```{r published, include = FALSE}
+
+# How many are published after email when we thought before emailing they were published (1), unpublished (2), and when we were uncertain (3)? Divide this per classification (manually opened and automatically opened) and whether we got an email response. 
+published_after_email_per_classification <- registration_data_included %>% group_by(published_before_email, email_response, classification) %>% summarise(published = sum(published_after_email == 1), not_published = sum(published_after_email == 2), unsure = sum(published_after_email == 3))
+published_after_email_per_classification
+
+# How many did we think unpublished before emails?
+total_assumed_unpublished <- sum(published_after_email_per_classification$published[5:8], published_after_email_per_classification$not_published[5:8])
+
+# Of those, how many did we get a reply for?
+total_assumed_unpublished_responses <- sum(published_after_email_per_classification$published[7:8], published_after_email_per_classification$not_published[7:8])
+
+# Of those, how many did we not get a reply for?
+total_assumed_unpublished_no_responses <- sum(published_after_email_per_classification$published[5:6], published_after_email_per_classification$not_published[5:6])
+
+# For the 45 we got responses about, 14 were actually published, and 31 were not.
+sum(published_after_email_per_classification$published[7:8])
+sum(published_after_email_per_classification$not_published[7:8])
+
+# Of the 14 published, 6 were from automatically opened registrations, out of 29 total closed projects, so 6/29 automatically opened projects we thought were unpublished were published. For the manually opened projects, 8/16 were published.
+published_after_email_per_classification$published[7]
+published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]
+published_after_email_per_classification$published[8]
+published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]
+
+# We did not get responses for 26 projects, of which 22 were automatically opened, and 4 were manually opened, for which the following might hold: 
+# 8/16 of the 4 manually opened registrations could be published.
+# 6/29 of the 22 automatically opened registrations could be published
+total_assumed_unpublished_no_responses
+published_after_email_per_classification$not_published[5]
+published_after_email_per_classification$not_published[6]
+
+published_after_email_per_classification$published[7] / (published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]) * published_after_email_per_classification$not_published[5]
+
+published_after_email_per_classification$published[8] / (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]) * published_after_email_per_classification$not_published[6]
+
+# So how many of the assumed unpublished are actually published?
+published_non_response_unpublished <- ((published_after_email_per_classification$published[7] / (published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]) * published_after_email_per_classification$not_published[5]) + (published_after_email_per_classification$published[8] / (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]) * published_after_email_per_classification$not_published[6]))
+
+unpublished_non_response_unpublished <- total_assumed_unpublished_no_responses - ((published_after_email_per_classification$published[7] / (published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]) * published_after_email_per_classification$not_published[5]) + (published_after_email_per_classification$published[8] / (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]) * published_after_email_per_classification$not_published[6]))
+
+# Now for uncertain projects
+
+# How many were we uncertain about before emails? 30
+total_assumed_unpublished_uncertain <- sum(published_after_email_per_classification$published[9:12], published_after_email_per_classification$not_published[9:12], published_after_email_per_classification$unsure[9:12])
+
+# Of those, how many did we get a reply for?
+total_assumed_unpublished_uncertain_responses <-  sum(published_after_email_per_classification$published[11:12], published_after_email_per_classification$not_published[11:12], published_after_email_per_classification$unsure[11:12])
+
+# Of those, how many did we not get a reply for?
+total_assumed_unpublished_uncertain_no_responses <-  sum(published_after_email_per_classification$published[9:10], published_after_email_per_classification$not_published[9:10], published_after_email_per_classification$unsure[9:10])
+
+# For the 24 we got responses about, 12 were actually published, and 12 were not.
+sum(published_after_email_per_classification$published[11:12])
+sum(published_after_email_per_classification$not_published[11:12])
+
+# We did not get a response for 6 projects we were uncertain about, of which 1 was manually opened, and 5 were automatically opened. For the 24 registrations we were uncertain about that we did received a response for, 12 are published, and 12 are not. For the manually opened projects, 3 out of 5 were published, and for the automatically opened projects 9 out of 19 were published. We did not get responses for 6 projects, of which 5 were automatically opened, and 1 was manually opened, for which the following might hold: 
+
+published_after_email_per_classification$published[11]
+published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]
+published_after_email_per_classification$published[12]
+published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]
+
+# We did not get a response for 6 projects we were uncertain about, of which 1 was manually opened, and 5 were automatically opened. For the 24 registrations we were uncertain about that we did received a response for, 12 are published, and 12 are not. For the manually opened projects, 3 out of 5 were published, and for the automatically opened projects 9 out of 10 were published. We did not get responses for 6 projects, of which 5 were automatically opened, and 1 was manually opened, for which the following might hold: 
+
+total_assumed_unpublished_uncertain_no_responses
+published_after_email_per_classification$unsure[9]
+published_after_email_per_classification$unsure[10]
+
+published_after_email_per_classification$published[11] / (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]) * published_after_email_per_classification$unsure[9]
+
+published_after_email_per_classification$published[12] / (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]) * published_after_email_per_classification$unsure[10]
+
+# So how many of the uncertain registrations we received no response for might actually published?
+# 2.368421 out of 6, and 3.031579 are unpublished. 
+
+published_non_response_uncertain <- (published_after_email_per_classification$published[11] / (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]) * published_after_email_per_classification$unsure[9]) + (published_after_email_per_classification$published[12] / (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]) * published_after_email_per_classification$unsure[10])
+
+unpublished_non_response_uncertain <- total_assumed_unpublished_uncertain_no_responses - ((published_after_email_per_classification$published[11] / (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]) * published_after_email_per_classification$unsure[9]) + (published_after_email_per_classification$published[12] / (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]) * published_after_email_per_classification$unsure[10]))
+
+# For manually opened registrations, altogether the % of published studies is:
+
+published_manual <- published_after_email_per_classification$published[2] + published_after_email_per_classification$published[4] + published_after_email_per_classification$published[7] + published_after_email_per_classification$published[11] + published_after_email_per_classification$published[7] / (published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]) * published_after_email_per_classification$not_published[5] + published_after_email_per_classification$published[11] / (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]) * published_after_email_per_classification$unsure[9]
+
+# For automatically opened registrations (classification 2), altogether the % of published studies is: 
+# 6 we classified as published, 6 published we thought unpublished but confirmed in email response, +9 confirmed unpublished we were uncertain about, + 5 * 9/19 for the 5 unsure without response, and those we thought unpublished predicted to be published. 
+published_auto <- published_after_email_per_classification$published[3] + published_after_email_per_classification$published[8] + published_after_email_per_classification$published[12] + published_after_email_per_classification$published[12] / (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]) * published_after_email_per_classification$unsure[10] + published_after_email_per_classification$published[8] / (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]) * published_after_email_per_classification$not_published[6]
+
+# And the unpublished studies for manually opened registrations is:
+unpublished_manual <- published_after_email_per_classification$not_published[7] + published_after_email_per_classification$not_published[11] + (1 - (published_after_email_per_classification$published[7] / (published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]))) * published_after_email_per_classification$not_published[5] + (1 - (published_after_email_per_classification$published[11] / (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]))) * published_after_email_per_classification$unsure[9]
+
+# And the unpublished automatically opened studies are:
+unpublished_auto <- published_after_email_per_classification$not_published[8] + published_after_email_per_classification$not_published[12] + (1 - (published_after_email_per_classification$published[8] / (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]))) * published_after_email_per_classification$not_published[6] + (1 - (published_after_email_per_classification$published[12] / (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]))) * published_after_email_per_classification$unsure[10]
+
+# Check to see if they combine to 169 total included:
+published_manual + published_auto + unpublished_manual + unpublished_auto
+
+# Compute CI around estimates per group
+result_total <- binom.confint(x = published_manual + published_auto, n = published_manual + unpublished_manual + published_auto + unpublished_auto, tol = 1e-8, method = "wilson")
+result_manual <- binom.confint(x = published_manual, n = published_manual + unpublished_manual, tol = 1e-8, method = "wilson")
+result_auto <- binom.confint(x = published_auto, n = published_auto + unpublished_auto, tol = 1e-8, method = "wilson")
+
+```
+
+Before emailing authors, we believed `r total_assumed_unpublished` articles remained unpublished. We received responses for `r total_assumed_unpublished_responses` registrations after emailing researchers, and we did not get a response for `r total_assumed_unpublished_no_responses` registrations. Based on these responses we learned that out that of all registrations we thought were unpublished `r sum(published_after_email_per_classification$published[7:8])` were actually published, and `r sum(published_after_email_per_classification$not_published[7:8])` remained unpublished. We will compute the probability that a paper is published, even though we believed it was unpublished both for registrations classified as automatically opened (`r published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]` out of `r total_assumed_unpublished_responses`), and manually opened (`r published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]` out of `r total_assumed_unpublished_responses`). 
+
+Of the `r published_after_email_per_classification$published[7] + published_after_email_per_classification$published[8]` registrations researchers informed us were actually published, `r published_after_email_per_classification$published[8]` were from registrations classified as automatically opened (out of `r published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]` automatically opened registrations that we received a response for), so `r published_after_email_per_classification$published[8]`/`r published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]` registrations classified as automatically opened that we thought were unpublished were actually published. For the registrations classified as manually opened, `r published_after_email_per_classification$published[7]` out of `r published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]` were published. 
+
+We can use these two percentages to extrapolate to the `r total_assumed_unpublished_no_responses` registrations we did not get a response to our email for. Of these `r total_assumed_unpublished_no_responses`, `r published_after_email_per_classification$not_published[6]` were classified as automatically opened, and `r published_after_email_per_classification$not_published[5]` were classified as manually opened, for which the following might hold. 8/16 of the `r published_after_email_per_classification$not_published[5]` manually opened registrations could be published (which equals `r published_after_email_per_classification$published[7] / (published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]) * published_after_email_per_classification$not_published[5]` published registrations), and `r published_after_email_per_classification$published[8]`/`r published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]` of the `r published_after_email_per_classification$not_published[6]` automatically opened registrations could be published (which equals `r published_after_email_per_classification$published[8]/ (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8])` * `r published_after_email_per_classification$not_published[6]` = `r 
+published_after_email_per_classification$published[8] / (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]) * published_after_email_per_classification$not_published[6]` registrations). So an additional `r published_non_response_unpublished` registrations should be considered published, and `r unpublished_non_response_unpublished` remain unpublished. 
+
+We can repeat these extrapolations for the registrations we were uncertain about. We were uncertain about `r total_assumed_unpublished_uncertain` registrations (often due to a lack of information in the registration). Of those we got a reply for `r total_assumed_unpublished_uncertain_responses`. For the `r total_assumed_unpublished_uncertain_responses` registrations we were uncertain about that we did received a response for, `r sum(published_after_email_per_classification$published[11:12])` are published, and `r sum(published_after_email_per_classification$not_published[11:12])` are not. For the manually opened projects, `r published_after_email_per_classification$published[11]` out of `r published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]` were published, and for the automatically opened projects `r published_after_email_per_classification$published[12]` out of `r published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]` were published. Of the `r sum(published_after_email_per_classification$unsure[9:10])` registrations we did not received a reply for, `r published_after_email_per_classification$unsure[9:10][1]` was manually opened, and `r published_after_email_per_classification$unsure[9:10][2]` were automatically opened. So on average `r published_after_email_per_classification$published[11]`/`r (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11])` * `r published_after_email_per_classification$unsure[9]` = `r published_after_email_per_classification$published[11] / (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]) * published_after_email_per_classification$unsure[9]` registrations classified as manually opened will be published, and `r published_after_email_per_classification$published[12]`/`r (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12])` * `r published_after_email_per_classification$unsure[10]` = `r published_after_email_per_classification$published[12] / (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]) * published_after_email_per_classification$unsure[10]` registrations classified as automatically opened will be published, for a total of `r published_non_response_uncertain`.
+
+Altogether, for automatically opened registrations the percentage of published studies is `r published_after_email_per_classification$published[3]` we classified as published, `r published_after_email_per_classification$published[8]` registrations we thought were unpublished, but through email responses learned were published, `r published_after_email_per_classification$published[12]` we were originally uncertain about but were confirmed unpublished in an email response, `r published_after_email_per_classification$published[12] / (published_after_email_per_classification$published[12] + published_after_email_per_classification$not_published[12]) * published_after_email_per_classification$unsure[10]` for the 5 we initially were unsure about but were predicted to be published had researchers replied to our emails, and the `r published_after_email_per_classification$published[8] / (published_after_email_per_classification$published[8] + published_after_email_per_classification$not_published[8]) * published_after_email_per_classification$not_published[6]` we initially thought were unpublished but were predicted to be published had researchers replied to our emails, for a total of `r published_auto` published automatically opened articles out of a total of `r (published_auto + unpublished_auto)` (`r 100*published_auto/(published_auto + unpublished_auto)`%).
+
+For automatically opened registrations the percentage of published studies is `r published_after_email_per_classification$published[2] + published_after_email_per_classification$published[4]` we classified as published, `r published_after_email_per_classification$published[7]` registrations we thought were unpublished, but through email responses learned were published, `r published_after_email_per_classification$published[11]` we were originally uncertain about but were confirmed unpublished in an email response, `r published_after_email_per_classification$published[11] / (published_after_email_per_classification$published[11] + published_after_email_per_classification$not_published[11]) * published_after_email_per_classification$unsure[9]` we initially were unsure about but were predicted to be published had researchers replied to our emails, and the `r published_after_email_per_classification$published[7] / (published_after_email_per_classification$published[7] + published_after_email_per_classification$not_published[7]) * published_after_email_per_classification$not_published[5]` we initially thought were unpublished but were predicted to be published had researchers replied to our emails, for a total of `r published_manual` published manually opened articles out of a total of `r (published_manual + unpublished_manual)` (`r 100*published_manual/(published_manual + unpublished_manual)`%). 
+
+These two estimated percentages of the number of published studies in the registrations classified as manually opened and automatically opened are used in Table 3 in the main document to extrapolate from our sample to the number of published articles in the entire population of registrations we retrieved from the OSF up to November 2017. 
+
 # Extensiveness of the details in registrations
 
 ```{r table-quality, echo = FALSE}
@@ -143,3 +264,4 @@ We were also interested in the motivation to either make the associated OSF proj
 # Researchers
 
 Some researchers appeared in our database multiple times. This is an indication of the use of the OSF by early adopters in the years up to 2017. After excluding multiple registrations for the same research project, one researcher appeared three times, and three other researchers appeared two times. Although each registration can be published or not, there is the possibility of some dependencies in the data set because the probability that these authors publish a paper might be correlated across registrations. 
+
