@@ -2,7 +2,7 @@
 title             : "Supplement to: An Inception Cohort Study Quantifying How Many Registered Studies are Published."
 shorttitle        : "SUPPLEMENT"
 author: 
-  - name          : "Eline Ensinck"
+  - name          : "Eline N. F. Ensinck"
     affiliation   : "1"
     corresponding : no    # Define only one corresponding author
     email         : "e.n.f.ensinck@student.tue.nl"  
@@ -198,7 +198,7 @@ For automatically opened registrations the percentage of published studies is `r
 
 These two estimated percentages of the number of published studies in the registrations classified as manually opened and automatically opened are used in Table 3 in the main document to extrapolate from our sample to the number of published articles in the entire population of registrations we retrieved from the OSF up to November 2017. 
 
-# Extensiveness of the details in registrations
+# Extensiveness of Information in Registrations
 
 ```{r table-quality, echo = FALSE}
 
@@ -212,16 +212,14 @@ apa_table(quality_reg, digits = 0, caption = "Classification of the extensivenes
 
 Because large differences were observed between the level of detail provided in a registration, and because the level of detail influences the probability that the registration can be matched to a publication of the study, we coded how extensive the registrations were. `r round(100*quality_reg[1,1]/sum(quality_reg[1,]),0)`% of all registrations in the manually opened registrations and `r round(100*quality_reg[2,1]/sum(quality_reg[2,]),0)`% of all registrations in the automatically opened registration were empty, so that it was not clear what the study was about purely from the registration. At least a minimal description was given for `r round(100*quality_reg[1,2]/sum(quality_reg[1,]),0)`% of the registrations in the manually opened registrations and `r round(100*quality_reg[2,2]/sum(quality_reg[2,]),0)`% in the automatically opened registration, meaning that although very brief, there were some details about the content of the study (e.g., a descriptive title). A more detailed short description was provided in `r round(100*quality_reg[1,3]/sum(quality_reg[1,]),0)`% of the cases in the manually opened registrations and `r round(100*quality_reg[2,3]/sum(quality_reg[2,]),0)`% of the cases in the automatically opened registration. Finally, most registrations seem to fall in the last group of extensive registrations (`r round(100*quality_reg[1,4]/sum(quality_reg[1,]),0)`% and `r round(100*quality_reg[2,4]/sum(quality_reg[2,]),0)`% in the manually opened registrations and the automatically opened registration, respectively). These results are summarized in Table \@ref(tab:table-quality). The fact that similar percentages are found in manually opened registrations and the automatically opened registration shows that the level of detail in the registrations does not differ substantially between the two groups. Therefore, the difference in probability that we found a registration that was classified as manually opened, compared to classifications that were automatically opened, is not explained by a difference in the level of detail of the registrations.
 
-# Fine-grained categorization of reasons for non-publication
+# Fine-Grained Categorization of Reasons for Non-Publication
 
-In the main text we have classified the reasons that researchers provided to not to publish their registered study in five categories. Below in Table \@ref(tab:reasons-non-publish) we provide a more fine-grained classification consisting of 15 categories. 
+In the main text we have classified the reasons that researchers provided to not publish their registered study in five categories. Below in Table \@ref(tab:reasons-non-publish) we provide a more fine-grained classification consisting of 15 categories. 
 
 ```{r reasons-non-publish}
 # Reason not published ----------------------------------------------------
 
-# It matters if this is done on all registrations we emailed for, or just the ones we ended up including. 
-
-reasons_table <- registration_data_included %>% group_by(classification) %>% summarise(a = sum(reason_if_unpublished == 1), b = sum(reason_if_unpublished == 2), c = sum(reason_if_unpublished == 3), d = sum(reason_if_unpublished == 4), e = sum(reason_if_unpublished == 5), f = sum(reason_if_unpublished == 6), h = sum(reason_if_unpublished == 7), i = sum(reason_if_unpublished == 8), j = sum(reason_if_unpublished == 9), k = sum(reason_if_unpublished == 10), l = sum(reason_if_unpublished == 11), m = sum(reason_if_unpublished == 12), n = sum(reason_if_unpublished == 13), o = sum(reason_if_unpublished == 14), p = sum(reason_if_unpublished == 15), q = sum(reason_if_unpublished == 16))
+reasons_table <- registration_data %>% group_by(classification) %>% summarise(a = sum(reason_if_unpublished == 1), b = sum(reason_if_unpublished == 2), c = sum(reason_if_unpublished == 3), d = sum(reason_if_unpublished == 4), e = sum(reason_if_unpublished == 5), f = sum(reason_if_unpublished == 6), h = sum(reason_if_unpublished == 7), i = sum(reason_if_unpublished == 8), j = sum(reason_if_unpublished == 9), k = sum(reason_if_unpublished == 10), l = sum(reason_if_unpublished == 11), m = sum(reason_if_unpublished == 12), n = sum(reason_if_unpublished == 13), o = sum(reason_if_unpublished == 14), p = sum(reason_if_unpublished == 15), q = sum(reason_if_unpublished == 16))
 reasons_table[3,] <- reasons_table[1,] + reasons_table[2,]
 reasons_table <- as.data.frame(reasons_table[,-1])
 rownames(reasons_table) <- c("Manually Opened", "Automatically Opened", "Total")
@@ -254,8 +252,6 @@ apa_table(reasons_open_project_table, digits = 0, caption = "Summary of main rea
 ```{r reasonclosed} 
 apa_table(reasons_closed_project_table, digits = 0, caption = "Summary of main reasons researchers self-reported to not open their OSF project page.")
 ```
-
-\newpage
 
 # Motivations for opening or not opening OSF project pages
 
