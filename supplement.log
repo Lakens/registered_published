@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.26)  1 JUN 2023 16:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.26)  2 JUN 2023 10:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -683,9 +683,9 @@ Here is how much of TeX's memory you used:
  35664 multiletter control sequences out of 15000+600000
  563580 words of font info for 114 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 89i,11n,90p,2167b,532s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,11n,90p,2386b,534s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/Users/dlakens/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on supplement.pdf (4 pages, 62752 bytes).
+Output written on supplement.pdf (4 pages, 62347 bytes).
 PDF statistics:
  101 PDF objects out of 1000 (max. 8388607)
  88 compressed objects within 1 object stream
