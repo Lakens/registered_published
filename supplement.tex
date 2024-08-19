@@ -5,16 +5,19 @@
 \documentclass[
   ,jou, a4paper,floatsintext]{apa6}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -112,13 +115,13 @@
   {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
 \makeatother
 
-% \usepackage{etoolbox}
 \makeatletter
-\patchcmd{\HyOrg@maketitle}
+\usepackage{etoolbox}
+\patchcmd{\maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
-\patchcmd{\HyOrg@maketitle}
+\patchcmd{\maketitle}
   {\section{\protect\normalfont{\@title}}}
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
@@ -135,13 +138,16 @@
 \usepackage{dblfloatfix}
 
 
+\usepackage{lineno}
+
+\linenumbers
 \usepackage{csquotes}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={Supplement to: An Inception Cohort Study Quantifying How Many Registered Studies are Published.},
   pdfauthor={Eline N. F. Ensinck1 \& Daniël Lakens1},
@@ -175,62 +181,27 @@ This supplement provides additional details on the classification of registratio
 \begin{document}
 \maketitle
 
-\hypertarget{details-on-classifying-registrations-as-a-research-study}{%
-\section{Details on Classifying Registrations as a Research Study}\label{details-on-classifying-registrations-as-a-research-study}}
+\section{Details on Classifying Registrations as a Research Study}\label{details-on-classifying-registrations-as-a-research-study}
 
 It can be challenging to determine whether a registration was performed with the goal to publish a study. Sometimes, the description of the registration or project page explicitly revealed that a registration was not an actual research study (for instance, when the group number of the course was shared), or it explicitly linked to a final publication. When it was not clear from the description on the OSF if the registration concerned an actual research study, we searched for information about the researcher(s) on the OSF. If the person who registered the project had various activity points and projects on the OSF, we assumed this person was an active researcher, and not a student. If someone had used the OSF at most a few times since 2017, and did not provide any personal information, we tried to determine if the user was a researcher by searching for scientific publications or membership of research groups (e.g.~profiles on institutional websites). If such information could be found, the registration was coded as an actual research study. If such information could not be found, the registration was marked as ``no research study'' (e.g., it was assumed to be a student assignment). In the case of multiple researchers, it is possible that only a subgroup of the researchers could be found. If only one of the researchers seemed to be a real researcher, we assumed that the registration was part of a student project, where the researcher supervised the other users of the OSF. However, if more than one researcher seemed to be an actual researcher, the registration was marked as an actual research study. These decisions necessarily introduce some arbitrariness in whether a study was intended to be published or not, and therefore we explored whether researchers intended to publish a study when we emailed researchers to follow up on unpublished registrations (see below). As we did not email researchers when we felt confident the registration was not a research study, and as we did not receive replies from all researchers we emailed, the final classification has remaining uncertainty (see the discussion).
 
-\hypertarget{details-on-classifying-studies-as-published-or-not}{%
-\section{Details on Classifying Studies as Published or Not}\label{details-on-classifying-studies-as-published-or-not}}
+\section{Details on Extrapolating to the Population}\label{details-on-extrapolating-to-the-population}
 
-\begin{table*}[tbp]
+Before emailing authors, we believed 71 articles remained unpublished. We received responses for 45 registrations after emailing researchers, and we did not get a response for 26 registrations. Based on these responses we learned that out that of all registrations we thought were unpublished 14 were actually published, and 31 remained unpublished. We will compute the probability that a paper is published, even though we believed it was unpublished both for registrations classified as automatically opened (28 out of 45), and manually opened (17 out of 45).
 
-\begin{center}
-\begin{threeparttable}
+Of the 14 registrations researchers informed us were actually published, 6 were from registrations classified as automatically opened (out of 28 automatically opened registrations that we received a response for), so 6/28 registrations classified as automatically opened that we thought were unpublished were actually published. For the registrations classified as manually opened, 8 out of 17 were published.
 
-\caption{\label{tab:publicationtype}Type of document that matched the registration for all registrations that were publicly shared}
-
-\begin{tabular}{llll}
-\toprule
- & \multicolumn{1}{c}{Manually Opened} & \multicolumn{1}{c}{Automatically Opened} & \multicolumn{1}{c}{Total}\\
-\midrule
-Journal Article & 53 & 16 & 69\\
-Preprint & 13 & 2 & 15\\
-PhD Thesis & 6 & 7 & 13\\
-Poster & 1 & 1 & 2\\
-Report & 0 & 0 & 0\\
-Conference Proceeding & 0 & 0 & 0\\
-\bottomrule
-\end{tabular}
-
-\end{threeparttable}
-\end{center}
-
-\end{table*}
-
-For each registration, we first searched for the combination of the title of the registration and the names of the researchers in Google Scholar and examined the search results. We considered the registration published if it appeared as a journal article, preprint, PhD thesis in a repository, an online report, or conference proceedings. The frequency of each publication type is provided in Table \ref{tab:publicationtype}. When a publication with a similar title was identified, the publication was downloaded and we determined if the publication matched the topic of the registration, was published after the registration date on the OSF, and the OSF users on the registration at least partly overlapped with the researchers of the publication. We also searched the publication for a link to an OSF project page that was associated with the registration. If the publication indeed seemed to be about the same topic and was published after the registration date on the OSF, the study was marked as publicly shared.
-
-Because titles of the registrations and papers often do not match we continued our search based on the names of the OSF users. For each user associated with a registration we retrieved a list of their publications and scanned through their publications after the registration date. If a document similar to the topic of the registration or in collaboration with some of the other OSF users associated with the registration was found, we again aimed to determine if the publication matched the registration. Whenever we failed to find a publication that seemed to be related to a registration the registration was marked as ``not publicly shared'' in any of the document types outlined above.
-
-\hypertarget{details-on-extrapolating-to-the-population}{%
-\section{Details on Extrapolating to the Population}\label{details-on-extrapolating-to-the-population}}
-
-Before emailing authors, we believed 71 articles remained unpublished. We received responses for 45 registrations after emailing researchers, and we did not get a response for 26 registrations. Based on these responses we learned that out that of all registrations we thought were unpublished 14 were actually published, and 31 remained unpublished. We will compute the probability that a paper is published, even though we believed it was unpublished both for registrations classified as automatically opened (29 out of 45), and manually opened (16 out of 45).
-
-Of the 14 registrations researchers informed us were actually published, 6 were from registrations classified as automatically opened (out of 29 automatically opened registrations that we received a response for), so 6/29 registrations classified as automatically opened that we thought were unpublished were actually published. For the registrations classified as manually opened, 8 out of 16 were published.
-
-We can use these two percentages to extrapolate to the 26 registrations we did not get a response to our email for. Of these 26, 22 were classified as automatically opened, and 4 were classified as manually opened, for which the following might hold. 8/16 of the 4 manually opened registrations could be published (which equals 2 published registrations), and 6/29 of the 22 automatically opened registrations could be published (which equals 0.21 * 22 = 4.55 registrations). So an additional 6.55 registrations should be considered published, and 19.45 remain unpublished.
+We can use these two percentages to extrapolate to the 26 registrations we did not get a response to our email for. Of these 26, 22 were classified as automatically opened, and 4 were classified as manually opened, for which the following might hold. 8/16 of the 4 manually opened registrations could be published (which equals 1.88 published registrations), and 6/28 of the 22 automatically opened registrations could be published (which equals 0.21 * 22 = 4.71 registrations). So an additional 6.60 registrations should be considered published, and 19.40 remain unpublished.
 
 We can repeat these extrapolations for the registrations we were uncertain about. We were uncertain about 30 registrations (often due to a lack of information in the registration). Of those we got a reply for 24. For the 24 registrations we were uncertain about that we did received a response for, 12 are published, and 12 are not. For the manually opened projects, 3 out of 5 were published, and for the automatically opened projects 9 out of 19 were published. Of the 6 registrations we did not received a reply for, 1 was manually opened, and 5 were automatically opened. So on average 3/5 * 1 = 0.60 registrations classified as manually opened will be published, and 9/19 * 5 = 2.37 registrations classified as automatically opened will be published, for a total of 2.97.
 
-Altogether, for automatically opened registrations the percentage of published studies is 6 we classified as published, 6 registrations we thought were unpublished, but through email responses learned were published, 9 we were originally uncertain about but were confirmed unpublished in an email response, 2.37 for the 5 we initially were unsure about but were predicted to be published had researchers replied to our emails, and the 4.55 we initially thought were unpublished but were predicted to be published had researchers replied to our emails, for a total of 27.92 published automatically opened articles out of a total of 81 (34.47\%).
+Altogether, for automatically opened registrations the percentage of published studies is 6 we classified as published, 6 registrations we thought were unpublished, but through email responses learned were published, 9 we were originally uncertain about but were confirmed unpublished in an email response, 2.37 for the 5 we initially were unsure about but were predicted to be published had researchers replied to our emails, and the 4.71 we initially thought were unpublished but were predicted to be published had researchers replied to our emails, for a total of 28.08 published automatically opened articles out of a total of 80 (35.10\%).
 
-For automatically opened registrations the percentage of published studies is 62 we classified as published, 8 registrations we thought were unpublished, but through email responses learned were published, 3 we were originally uncertain about but were confirmed unpublished in an email response, 0.60 we initially were unsure about but were predicted to be published had researchers replied to our emails, and the 2 we initially thought were unpublished but were predicted to be published had researchers replied to our emails, for a total of 75.60 published manually opened articles out of a total of 88 (85.91\%).
+For automatically opened registrations the percentage of published studies is 62 we classified as published, 8 registrations we thought were unpublished, but through email responses learned were published, 3 we were originally uncertain about but were confirmed unpublished in an email response, 0.60 we initially were unsure about but were predicted to be published had researchers replied to our emails, and the 1.88 we initially thought were unpublished but were predicted to be published had researchers replied to our emails, for a total of 75.48 published manually opened articles out of a total of 89.00 (84.81\%).
 
 These two estimated percentages of the number of published studies in the registrations classified as manually opened and automatically opened are used in Table 3 in the main document to extrapolate from our sample to the number of published articles in the entire population of registrations we retrieved from the OSF up to November 2017.
 
-\hypertarget{extensiveness-of-information-in-registrations}{%
-\section{Extensiveness of Information in Registrations}\label{extensiveness-of-information-in-registrations}}
+\section{Extensiveness of Information in Registrations}\label{extensiveness-of-information-in-registrations}
 
 \begin{table*}[tbp]
 
@@ -243,8 +214,8 @@ These two estimated percentages of the number of published studies in the regist
 \toprule
  & \multicolumn{1}{c}{Empty} & \multicolumn{1}{c}{Minimal} & \multicolumn{1}{c}{Short} & \multicolumn{1}{c}{Extensive}\\
 \midrule
-Manually Opened & 16 & 32 & 9 & 32\\
-Automatically Opened & 13 & 23 & 6 & 39\\
+Manually Opened & 17 & 32 & 9 & 32\\
+Automatically Opened & 12 & 23 & 6 & 39\\
 \bottomrule
 \end{tabular}
 
@@ -253,10 +224,9 @@ Automatically Opened & 13 & 23 & 6 & 39\\
 
 \end{table*}
 
-We observed quite some variation in the amount of detail in the registrations that we examined. We therefore decided to code the extensiveness of the registrations based on the information written in the registration (but not in any associated files, such as uploaded text documents). We labeled all registrations that were empty as 1 (which means it was not clear what the study was about based on the registration) and all registrations that had a minimal description as 2 (this means either a detailed title or small remark about the content of the study was included). If there was a somewhat more detailed but short description about the study, the registration was coded as 3 and finally, all registrations that included a detailed description were coded as 4. In this way, we could compare the quality of the registrations in both groups and check for possible differences that could lead to different publication rates. 18\% of all registrations in the manually opened registrations and 16\% of all registrations in the automatically opened registration were empty, so that it was not clear what the goal or topic of the study was purely based on the registration. At least a minimal description was given for 36\% of the registrations in the manually opened registrations and 28\% in the automatically opened registration, meaning that although very brief, there were some details about the content of the study (e.g., a descriptive title). A more detailed short description was provided in 10\% of the cases in the manually opened registrations and 7\% of the cases in the automatically opened registration. Finally, most registrations seem to fall in the last group of extensive registrations (36\% and 48\% in the manually opened registrations and the automatically opened registration, respectively). These results are summarized in Table \ref{tab:table-quality}. The fact that similar percentages are found in manually opened registrations and the automatically opened registration shows that the level of detail in the registrations does not differ substantially between the two groups. Therefore, the difference in probability that we found a registration that was classified as manually opened, compared to classifications that were automatically opened, is not explained by a difference in the level of detail of the registrations.
+We observed quite some variation in the amount of detail in the registrations that we examined. We therefore decided to code the extensiveness of the registrations based on the information written in the registration (but not in any associated files, such as uploaded text documents). We labeled all registrations that were empty as 1 (which means it was not clear what the study was about based on the registration) and all registrations that had a minimal description as 2 (this means either a detailed title or small remark about the content of the study was included). If there was a somewhat more detailed but short description about the study, the registration was coded as 3 and finally, all registrations that included a detailed description were coded as 4. In this way, we could compare the quality of the registrations in both groups and check for possible differences that could lead to different publication rates. 19\% of all registrations in the manually opened registrations and 15\% of all registrations in the automatically opened registration were empty, so that it was not clear what the goal or topic of the study was purely based on the registration. At least a minimal description was given for 36\% of the registrations in the manually opened registrations and 29\% in the automatically opened registration, meaning that although very brief, there were some details about the content of the study (e.g., a descriptive title). A more detailed short description was provided in 10\% of the cases in the manually opened registrations and 8\% of the cases in the automatically opened registration. Finally, most registrations seem to fall in the last group of extensive registrations (36\% and 49\% in the manually opened registrations and the automatically opened registration, respectively). These results are summarized in Table \ref{tab:table-quality}. The fact that similar percentages are found in manually opened registrations and the automatically opened registration shows that the level of detail in the registrations does not differ substantially between the two groups. Therefore, the difference in probability that we found a registration that was classified as manually opened, compared to classifications that were automatically opened, is not explained by a difference in the level of detail of the registrations.
 
-\hypertarget{fine-grained-categorization-of-reasons-for-non-publication}{%
-\section{Fine-Grained Categorization of Reasons for Non-Publication}\label{fine-grained-categorization-of-reasons-for-non-publication}}
+\section{Fine-Grained Categorization of Reasons for Non-Publication}\label{fine-grained-categorization-of-reasons-for-non-publication}
 
 In the main text we have classified the reasons that researchers provided to not publish their registered study in five categories. Below in Table \ref{tab:reasons-non-publish} we provide a more fine-grained classification consisting of 15 categories.
 
@@ -273,7 +243,7 @@ In the main text we have classified the reasons that researchers provided to not
 \midrule
 No significant results & 2 & 5 & 7\\
 Left academia & 4 & 4 & 8\\
-Paper rejected & 5 & 3 & 8\\
+Paper rejected & 6 & 2 & 8\\
 Failed replication & 1 & 3 & 4\\
 Unfinished study & 1 & 6 & 7\\
 Educational project & 1 & 3 & 4\\
@@ -340,13 +310,11 @@ Reasons & 1 & 6 & 15 & 4 & 4 & 11 & 2\\
 
 \end{table*}
 
-\hypertarget{motivations-for-opening-or-not-opening-osf-project-pages}{%
-\section{Motivations for opening or not opening OSF project pages}\label{motivations-for-opening-or-not-opening-osf-project-pages}}
+\section{Motivations for opening or not opening OSF project pages}\label{motivations-for-opening-or-not-opening-osf-project-pages}
 
 We were also interested in the motivation to either make the associated OSF project public or keep it private. While most researchers (79\%) mentioned a motivation to practice open science as the primary reason for opening an OSF project (see Table \ref{tab:reasonopen}), more diverse reasons were given for keeping the OSF project closed (see Table \ref{tab:reasonclosed}). Many researchers (36\%) mentioned that the associated project does not contain any new or relevant information, so peers would not benefit if the project was opened. The second most common reason not to open the project (26\%) was that researchers simply forgot. Others made the moment to open the project dependent on the publication of the study (14\%), and technical issues (e.g., a lack of familiarity or misunderstanding about the OSF) were reasons to both open a project and to keep it private (in 8\% and 10\% of the cases, respectively).
 
-\hypertarget{researchers}{%
-\section{Researchers}\label{researchers}}
+\section{Researchers}\label{researchers}
 
 Some researchers appeared in our database multiple times. This is an indication of the use of the OSF by early adopters in the years up to 2017. After excluding multiple registrations for the same research project, one researcher appeared three times, and three other researchers appeared two times. Although each registration can be published or not, there is the possibility of some dependencies in the data set because the probability that these authors publish a paper might be correlated across registrations.
 

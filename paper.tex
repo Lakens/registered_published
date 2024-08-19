@@ -3,18 +3,21 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
-  ,jou, a4paper,floatsintext]{apa6}
+  ,man, a4paper,floatsintext]{apa6}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -59,28 +62,38 @@
   \let\oldsubparagraph\subparagraph
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
   \fi
   % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \ifLuaTeX
 \usepackage[bidi=basic]{babel}
@@ -135,13 +148,13 @@
   {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
 \makeatother
 
-% \usepackage{etoolbox}
 \makeatletter
-\patchcmd{\HyOrg@maketitle}
+\usepackage{etoolbox}
+\patchcmd{\maketitle}
   {\section{\normalfont\normalsize\abstractname}}
   {\section*{\normalfont\normalsize\abstractname}}
   {}{\typeout{Failed to patch abstract.}}
-\patchcmd{\HyOrg@maketitle}
+\patchcmd{\maketitle}
   {\section{\protect\normalfont{\@title}}}
   {\section*{\protect\normalfont{\@title}}}
   {}{\typeout{Failed to patch title.}}
@@ -156,25 +169,25 @@
   }
 {}{\PatchFailed}
 \keywords{File Drawer; Registries; Research Waste; Scientific Publication\newline\indent Word count: 4501}
-\usepackage{dblfloatfix}
+\usepackage{lineno}
 
-
+\linenumbers
 \usepackage{csquotes}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
-  pdftitle={An Inception Cohort Study Quantifying How Many Registered Studies are Published.},
+  pdftitle={An Inception Cohort Study Quantifying How Many Registered Studies are Publicly Shared.},
   pdfauthor={Eline N. F. Ensinck1 \& Daniël Lakens1},
   pdflang={en-EN},
   pdfkeywords={File Drawer; Registries; Research Waste; Scientific Publication},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{An Inception Cohort Study Quantifying How Many Registered Studies are Published.}
+\title{An Inception Cohort Study Quantifying How Many Registered Studies are Publicly Shared.}
 \author{Eline N. F. Ensinck\textsuperscript{1} \& Daniël Lakens\textsuperscript{1}}
 \date{}
 
@@ -183,7 +196,7 @@
 
 \authornote{
 
-This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research. A computationally reproducible manuscript is available at \url{https://github.com/Lakens/registered_published} and data and materials on \url{https://osf.io/8uqfb/}. We are grateful to Stephen Lindsay, Cristian Mesquida Caldentey, Henry Wyneken, and Gerda Wyssen for feedback on a draft.
+This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research and with the support of the Ammodo Science Award 2023 for Social Sciences. A computationally reproducible manuscript is available at \url{https://github.com/Lakens/registered_published} and data and materials on \url{https://osf.io/8uqfb/}. We are grateful to Stephen Lindsay, Cristian Mesquida Caldentey, Henry Wyneken, and Gerda Wyssen for feedback on a draft.
 
 Correspondence concerning this article should be addressed to Daniël Lakens, Den Dolech 1, 5600MB Eindhoven, The Netherlands. E-mail: \href{mailto:D.Lakens@tue.nl}{\nolinkurl{D.Lakens@tue.nl}}
 
@@ -192,7 +205,7 @@ Correspondence concerning this article should be addressed to Daniël Lakens, De
 \affiliation{\vspace{0.5cm}\textsuperscript{1} Eindhoven University of Technology}
 
 \abstract{%
-We quantified how many studies registered on the Open Science Framework (OSF) up to November 2017 are performed but not shared after at least 4 years. Examining a sample of 315 registrations, of which 169 were research studies, we found that 104 (61.3\%) were published. We estimate that 5550 out of 9544 (58.2\%) registered studies on the OSF are published. Researchers use registries to make unpublished studies public, and the OSF policy to open registrations after a four year embargo substantially increases the number of studies that become known to the scientific community. In responses to emails asking researchers why studies remained unpublished logistical issues (e.g., lack of time, researchers changing jobs) were the most common cause, followed by null results, and rejections during peer review. Our study shows that a substantial amount of studies researchers perform remain unpublished.
+We quantified how many studies registered on the Open Science Framework (OSF) up to November 2017 are performed but not shared after at least 4 years. Examining a sample of 169 registered research studies we found that 104 (61.3\%) were publicly shared. We estimate that 5550 out of 9544 (58.2\%) registered studies on the OSF are publicly shared. Researchers use registries to make unpublished studies public, and the OSF policy to open registrations after a four year embargo substantially increases the number of studies that become known to the scientific community. In responses to emails asking researchers why studies remained unpublished logistical issues (e.g., lack of time, researchers changing jobs) were the most common cause, followed by null results, and rejections during peer review. Our exploratory study shows that a substantial amount of studies that researchers perform remain unpublished.
 }
 
 
@@ -200,42 +213,43 @@ We quantified how many studies registered on the Open Science Framework (OSF) up
 \begin{document}
 \maketitle
 
-Not all studies that scientists perform end up in the scientific literature (\protect\hyperlink{ref-franco_publication_2014}{Franco, Malhotra, \& Simonovits, 2014}; \protect\hyperlink{ref-greenwald_consequences_1975}{Greenwald, 1975}; \protect\hyperlink{ref-sterling_publication_1959}{Sterling, 1959}). Studies remain unpublished for a variety of reasons, such as a lack of resources to analyse the results, a loss of interest, perceived methodological weaknesses, or because the results do not support predictions (\protect\hyperlink{ref-easterbrook_publication_1991}{Easterbrook, Berlin, Gopalan, \& Matthews, 1991}; \protect\hyperlink{ref-lishner_sorting_2021}{Lishner, 2021}). When studies that have the potential to contribute to scientific knowledge go unpublished research resources are wasted (\protect\hyperlink{ref-buxton_avoiding_2021}{Buxton et al., 2021}; \protect\hyperlink{ref-chalmers_avoidable_2009}{Chalmers \& Glasziou, 2009}). Although it is challenging to quantify how many studies remain unpublished the existence of the proverbial file drawer (\protect\hyperlink{ref-rosenthal_file_1979}{Rosenthal, 1979}) has been demonstrated in disciplines such as psychology, sociology, economics, and medicine (\protect\hyperlink{ref-dickersin_factors_1992}{Dickersin, Min, \& Meinert, 1992}; \protect\hyperlink{ref-franco_publication_2014}{Franco et al., 2014}; \protect\hyperlink{ref-gerber_publication_2010}{Gerber, Malhotra, Dowling, \& Doherty, 2010}; \protect\hyperlink{ref-scheel_excess_2021}{Scheel, Schijen, \& Lakens, 2021}).
+Not all studies that scientists perform end up in the scientific literature (\citeproc{ref-franco_publication_2014}{Franco, Malhotra, \& Simonovits, 2014}; \citeproc{ref-greenwald_consequences_1975}{Greenwald, 1975}; \citeproc{ref-sterling_publication_1959}{Sterling, 1959}). Studies remain unpublished for a variety of reasons, such as a lack of resources to analyse the results, a loss of interest, perceived methodological weaknesses, or because the results do not support predictions (\citeproc{ref-easterbrook_publication_1991}{Easterbrook, Berlin, Gopalan, \& Matthews, 1991}; \citeproc{ref-lishner_sorting_2021}{Lishner, 2021}). When studies that have the potential to contribute to scientific knowledge go unpublished research resources are wasted (\citeproc{ref-buxton_avoiding_2021}{Buxton et al., 2021}; \citeproc{ref-chalmers_avoidable_2009}{Chalmers \& Glasziou, 2009}). Although it is challenging to quantify how many studies remain unpublished the existence of the proverbial file drawer (\citeproc{ref-rosenthal_file_1979}{Rosenthal, 1979}) has been demonstrated in disciplines such as psychology, sociology, economics, and medicine (\citeproc{ref-dickersin_factors_1992}{Dickersin, Min, \& Meinert, 1992}; \citeproc{ref-franco_publication_2014}{Franco et al., 2014}; \citeproc{ref-gerber_publication_2010}{Gerber, Malhotra, Dowling, \& Doherty, 2010}; \citeproc{ref-scheel_excess_2021}{Scheel, Schijen, \& Lakens, 2021}).
 
-The most accurate estimates of the percentage of performed studies in the file drawer come from inception cohort studies where studies are -- typically retroactively - followed from the moment they are started (\protect\hyperlink{ref-song_dissemination_2010}{Song et al., 2010}). For example, Dickersin and colleagues observed that from all studies approved by two institutional review boards serving the school of medicine and the school of health at the John Hopkins University 81\% and 66\% were published, respectively (\protect\hyperlink{ref-dickersin_factors_1992}{Dickersin et al., 1992}). In the only inception cohort study in the social sciences we know of, Franco, Malhotra, and Simonovits (\protect\hyperlink{ref-franco_publication_2014}{2014}) found that out of 249 large studies on nationally representative samples 45\% were published in a scientific journal or as a book chapter, 29\% were written up but remained unpublished at the time of the study, and 20\% (primarily non-significant results) were unpublished and not written up.
+The most accurate estimates of the percentage of performed studies in the file drawer come from inception cohort studies where studies are -- typically retroactively - followed from the moment they are started (\citeproc{ref-song_dissemination_2010}{Song et al., 2010}). For example, Dickersin and colleagues observed that from all studies approved by two institutional review boards serving the school of medicine and the school of health at the Johns Hopkins University 81\% and 66\% were published, respectively (\citeproc{ref-dickersin_factors_1992}{Dickersin et al., 1992}). We only know of two inception cohort studies in the social sciences. Franco, Malhotra, and Simonovits (\citeproc{ref-franco_publication_2014}{2014}) found that out of 249 large studies on nationally representative samples 45\% were published in a scientific journal or as a book chapter, 29\% were written up but remained unpublished at the time of the study, and 20\% (primarily non-significant results) were unpublished and not written up. Cooper, DeNeve, and Charlton (\citeproc{ref-cooper_finding_1997}{1997}) followed up on 159 studies submitted to the ethical review board of a university, which included student projects, and found that 55 projects were prepared for publication, of which 41 studies, primarily those with statistically significant results, were published. More recently, Osofu and Posner (\citeproc{ref-ofosu_preanalysis_2023}{2023}) found that of 195 studies in registries used in economics, 93 were published within at least 2 years.
 
-One way to make all studies that have been performed known to peers is to require researchers to (pre)register their study in a publicly accessible database (\protect\hyperlink{ref-dickersin_evolution_2012}{Dickersin \& Rennie, 2012}). Registries often require researchers to update a registered study with the results. An example of such a study registry is ClinicalTrials.gov. The requirement to register certain types of studies does not exist in psychology. However, since 2013 the Open Science Framework (OSF) has provided a free study registry for any scientific domain (\protect\hyperlink{ref-spies_open_2013}{Spies, 2013}). The OSF offers researchers the possibility to voluntarily register their study and specify information about the study rationale and methods.
+One way to make all studies that have been performed known to peers is to require researchers to (pre)register their study in a publicly accessible database, and to add the main outcomes to the database when the project has been completed (\citeproc{ref-dickersin_evolution_2012}{Dickersin \& Rennie, 2012}). An example of such a study registry is ClinicalTrials.gov. The requirement to register certain types of studies does not exist in psychology. However, since 2013 the Open Science Framework (OSF) has provided a free study registry for any scientific domain (\citeproc{ref-spies_open_2013}{Spies, 2013}). The OSF offers researchers the possibility to voluntarily register their study and specify information about the study rationale and methods.
 
 One interesting aspect of registrations on the OSF is the fact that every registration after June 8 2015 (if not withdrawn) is made public after an embargo period of four years\footnote{see \url{https://web.archive.org/web/20230519110220/https://groups.google.com/g/openscienceframework/c/3ZaZYKV8WD4/m/JCN4OB31skQJ}}. Because of this policy the OSF provides a public record of all studies that were registered on the platform up to four years ago. It is therefore possible to use the database of registrations for an inception cohort study that quantifies how many studies are performed, but never publicly shared.
 
-\hypertarget{the-current-study}{%
-\section{The current study}\label{the-current-study}}
+\section{The current study}\label{the-current-study}
 
-In this project we aimed to answer four main research questions. First, we were interested in estimating the number of registered studies on the OSF that were performed but remained unpublished after four years. Although registered studies are only a subset of all studies researchers perform, in the results section we estimate that our findings apply to 9,544 research studies registered on the OSF up to November 2017.
+In this project we aimed to answer two main research questions, and two secondary questions. First, we were interested in estimating the number of registered studies on the OSF that were performed but were not publicly shared after four years. Although registered studies are only a subset of all studies researchers perform, in the results section we estimate that our findings apply to 9,544 research studies registered on the OSF up to November 2017.
 
-Second, we were interested in whether the policies of a study registry to automatically open registrations after an embargo increases the number of studies that become known to peers, compared to registries where registrations can remain closed indefinitely. By comparing the publication status of registrations that researchers manually made public with registrations automatically opened by the OSF we can answer two questions. How often do researchers voluntarily share information about their study, even when the study remains unpublished? And how often do we learn about performed but unpublished studies because registrations are automatically made public after four years? Answers to these questions can provide insights into the benefits of a platform that makes registrations public after an embargo period (e.g., OSF), compared to platforms where users can choose to make their registration public or not (e.g., AsPredicted.org).
+Second, while it is useful to quantify how many registered studies are not shared after four years, it is equally important to understand why studies are not shared. The fourth aim of our study was to contact researchers of registrations of studies for which we could not find the results, and ask why their results were not made public.
 
-Our third question examined whether fellow researchers can use registries to discover unpublished studies by identifying whether a registered study is publicly shared, or not. For a registry to notify the scientific community about the presence of unpublished studies the information in the registry needs to be extensive enough to match the registration to a published study, or to conclude the registered study remains unpublished. As far as we know, this is the first investigation that retrieves registrations from the OSF to attempt to identify whether the associated study has been publicly shared or not.
+We were also interested in whether the policy of a study registry to automatically open registrations after an embargo increases the number of studies that become known to peers. By comparing the publication status of registrations that researchers manually made public with registrations automatically opened by the OSF we can answer two questions. How often do researchers voluntarily share information about their study, even when the study is not shared in a paper, preprint, or poster? And how often do we learn about studies that are performed but not shared publicly because registrations are automatically made public after four years? Answers to these questions can provide insights into the benefits of a platform that makes registrations public after an embargo period (e.g., OSF), compared to platforms where users can choose to make their registration public or not (e.g., AsPredicted.org).
 
-Finally, while it is useful to quantify how many registered studies remain unpublished after four years, it is equally important to understand why studies remain unpublished. The fourth aim of our study was to contact researchers of registrations of studies that were not published and ask why their study remains unpublished.
+Furthermore, while attempting to answer our main research questions we simultaneously examined whether registries can be used by researchers to discover unpublished studies by identifying whether a registered study is publicly shared, or not. For this purpose, the information in the registry needs to be extensive enough to match the registration to a published study, preprint, or poster, or to conclude that the registered study has not been made public. As far as we know, this is the first investigation that retrieves registrations from the OSF to attempt to identify whether the associated study has been publicly shared or not. It adds to the literature by examining a voluntary registry, mainly used by psychologists (\citeproc{ref-vandenakker_selective_2023}{Van den Akker, van Assen, et al., 2023}), where the platform has the policy of automatically opening preregistrations after 4 years. Our study is exploratory, and not preregistered.
 
-\hypertarget{method}{%
-\section{Method}\label{method}}
+\section{Method}\label{method}
 
-\emph{Data sources}: As registrations become public after four years, we downloaded all information that can be retrieved through the application programming interface (API) of the OSF for 17.729 registrations that were created before November 18, 2017 (four years before the start of this study). Registrations are part of at least one associated project page on the OSF. Sometimes researchers still work on projects four years after a registration, and we saw continued activity in a few registrations in our sample. The final classification was based on whether the projects were public in April 2022. For 8008 registrations (45.17\%) the associated project was public, while for the remaining 9721 registrations (54.83\%) the associated project was private. We randomly sampled registrations from both these groups. During data analysis we made sure that we did not include the same study twice (even though a single study can have multiple registrations, for example because an analysis subcomponent and a hypothesis subcomponent each get a separate ID in the OSF database). Our sampling strategy increased the probability that studies with multiple registrations were included in the study.
+\emph{Data sources}: As registrations become public after four years, we downloaded all information that can be retrieved through the application programming interface (API) of the OSF for 17.729 registrations that were created before November 18, 2017 (four years before the start of this study). The OSF is built around projects, and each project has its own unique address (which can optionally by turned into a DOI). Each project can contain one or more preregistrations, Each preregistration receives a unique address and DOI. When the preregistration is automatically made public after four years, the associated project page remains closed (but project pages can be manually made public by the user at any time). Registrations are part of at least one associated project page on the OSF. Sometimes researchers still work on projects four years after a registration, and we saw continued activity in a few registrations in our sample. The classification of a project as either public or private might therefore change over time. The final classification used throughout the rest of the study was based on whether the projects were public in April 2022, as we double checked all projects (and their associated registrations) up to this time. For 8008 registrations (45.17\%) the associated project was public, while for the remaining 9721 registrations (54.83\%) the associated project was private. We randomly sampled registrations from both these groups. During data analysis we excluded registrations from the same project (even though a single project can have multiple registrations, for example because a registration an analysis subcomponent and a hypothesis subcomponent each get a separate registration ID in the OSF database). The fact that one study can have multiple registrations on the OSF and that we sampled from the total pool of registrations on the OSF increased the probability that studies with multiple registrations were included in the study.
 
-\emph{Classifying Registrations}: We aimed to examine at least 300 registrations (150 for which the registration was made public by the researchers, and 150 for which the registration was made public automatically after four years). We had no justification for our sample size given uncertainty about the number of studies that would fit our inclusion criteria but relied on an informal trade-off between time constraints and sufficiently accurate estimates. The OSF API does not provide information about how a project has been made public. To circumvent this limitation, we relied on a proxy indicator to classify projects as opened by the user, or opened automatically when the embargo was lifted. We classified OSF registrations as made public by the researcher when any of the associated OSF project pages was public, and classified the project as made public automatically by the OSF after four years when the associated project page was not made public. Our reasoning is that when only the registration is public, but the underlying project remains closed, the registration is most likely opened automatically, as there are not that many use-cases where a researcher would open the registration, but not the associated project. This is not a perfect proxy, as it is possible for users to make a registration public, but to keep the associated OSF project hidden (for example, because they mistakenly believe they made the entire project public when making the registration public). When the registration and underlying project are public, we assume the registration is opened by the researchers. This assumption is more likely to hold, as only users can make underlying project pages public.
+\emph{Classifying Registrations}: We aimed to get close to 100 registrations that were made public by the researchers, and 100 for which the registration was made public automatically after four years. Given uncertainty about the number of studies that would fit our inclusion criteria, we added registrations in batches until we approximated this total after excluding studies that did not fit our inclusion criteria. We had no formal sample size justification, but relied on an informal trade-off between time constraints and sufficiently accurate estimates. The OSF API does not provide information about how a registration has been made public (for information on the data accessible through the API, see \url{https://developer.osf.io/\#tag/Registrations}). To circumvent this limitation, we relied on a proxy indicator to classify registrations as opened by the user, or opened automatically when the embargo was lifted. We classified OSF registrations as made public by the researcher when any of the associated OSF project pages was public, and classified the registration as made public automatically by the OSF after four years when the associated project page was not made public. Our reasoning is that when only the registration is public, but the underlying project remains closed, the registration is most likely opened automatically, as there are not that many use-cases where a researcher would open the registration, but not the associated project. This is not a perfect proxy, as it is possible for users to make a registration public, but to keep the associated OSF project hidden (for example, because they mistakenly believe they made the entire project public when making the registration public). As pointed out by a reviewer, as only preregistrations after June 8 2015 are made public automatically, none of the preregistrations sampled before this date can be automatically opened, yet five preregistrations in this time span were originally included due to our proxy. These five projects were recoded as manually opened. When the registration and underlying project are public, we assume the registration is opened by the researchers. This assumption is more likely to hold, as only users can make underlying project pages public.
 
-\emph{Classifying Publication Status}: Studies can be made available in different ways (\protect\hyperlink{ref-lishner_sorting_2021}{Lishner, 2021}). We considered a study published if the study was communicated in a way that allows other researchers to learn about the results. In the remainder of this article the term `published' is used when we classified studies as publicly shared because they appeared in the peer reviewed literature, but also when they were shared as a preprint, a PhD thesis in a stable repository, or a poster or conference paper that described the study in sufficient detail to include it in a meta-analysis (see the online supplementary material for more detail). We did not include bachelor or master theses because even though these can eventually be published (as this article demonstrates) they primarily have an educational goal and we do not consider the file drawer problem equally applicable to this category of studies. Our definition of `published' is broader than in previous inception cohort studies (e.g., Dickersin et al. (\protect\hyperlink{ref-dickersin_factors_1992}{1992}); Franco et al. (\protect\hyperlink{ref-franco_publication_2014}{2014})). We believe the rise of preprints and stable repositories warrants a broader definition of what it means to publish the results of a study, and especially preprints provide a possible outlet for studies that a researcher might decide not to submit to a scientific journal.
+\emph{Classifying Publication Status}: Studies can be made available in different ways (\citeproc{ref-lishner_sorting_2021}{Lishner, 2021}). We considered a study publicly shared if the study was communicated in a way that allows other researchers to learn about the results. In the remainder of this article the term `publicly shared' is used when studies appeared in the peer reviewed literature, but also when they were shared as a preprint, a PhD thesis in a stable repository, or a poster or conference paper that described the study in sufficient detail to include it in a meta-analysis (see the online supplementary material for more detail). We did not include bachelor or master theses because even though these can eventually be published (as this article demonstrates) they primarily have an educational goal and we do not consider the file drawer problem equally applicable to this category of studies. Our definition of `publicly shared' is broader than the definition of `published' studies in previous inception cohort studies (e.g., Dickersin et al. (\citeproc{ref-dickersin_factors_1992}{1992}); Franco et al. (\citeproc{ref-franco_publication_2014}{2014})). We believe the rise of preprints and stable repositories warrants a broader definition of what it means to publicly share the results of a study, and especially preprints provide a possible outlet for studies that a researcher might decide not to submit to a scientific journal.
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\section{Results}\label{results}
 
-\emph{Inclusion criteria}: In total 315 randomly chosen registrations from manually and automatically opened registrations were examined to see whether they met the selection criteria of our study. Of these, the associated project was public for 164 registrations and the associated project was closed for 151 registrations. Registrations needed to be actual research studies, as we are interested in estimating how many studies remain unpublished when researchers had the goal to publish. We therefore coded and excluded registrations that were (1) withdrawn (e.g., all content is removed because an error was made in the registration, but the meta-data continues to exist), (2) performed for practice purposes (e.g.~student assignments or trial registrations), (3) used to generate a stable DOI for supplementary materials at the end of a project, and studies that are unlikely to end up in the file drawer such as (4) Registered Reports, (\protect\hyperlink{ref-allen_open_2019}{Allen \& Mehler, 2019}; \protect\hyperlink{ref-chambers_past_2022}{Chambers \& Tzavella, 2022}; \protect\hyperlink{ref-scheel_excess_2021}{Scheel et al., 2021}), and (5) multi-lab projects (i.e., the Reproducibility Project: Psychology).
+\emph{Inclusion criteria}: In total 315 randomly chosen registrations from manually and automatically opened registrations were examined to see whether they met the selection criteria of our study (for an adjusted PRISMA flowchart, see Figure \ref{fig:PRISMA}). Of these, the associated project was public for 169 registrations and the associated project was closed for 146 registrations. Registrations needed to be actual research studies, as we are interested in estimating how many studies are not publicly shared when researchers had the goal to perform a study that could be published. We therefore coded and excluded registrations that were (1) withdrawn, (2) performed for other purposes (e.g., student assignments or trial registrations), (3) no unique studies (i.e., another registration part of the same study already occurred in the sample), (4) no actual pre-registrations (e.g., used to generate a stable DOI for supplementary materials at the end of a project), and studies that are unlikely to end up in the file drawer such as (5) Registered Reports (\citeproc{ref-allen_open_2019}{Allen \& Mehler, 2019}; \citeproc{ref-chambers_present_2022}{Chambers \& Tzavella, 2022}; \citeproc{ref-scheel_excess_2021}{Scheel et al., 2021}), and (6) multi-lab projects (i.e., the Reproducibility Project: Psychology).
 
-The number of included and excluded registrations in the sample is summarized in Table \ref{tab:table-included}. We originally included 176 registrations. After excluding 7 registrations based on email responses for being student projects, performed without the goal of publishing the data, or part of a multi-lab project, our final sample size consists of 169 registrations. Of these, 88 registrations were categorized as manually opened and 81 registrations were categorized as automatically opened. An overview of how often registrations were excluded for each of the 5 inclusion criteria is provided in Table \ref{tab:table-excluded}.
+\begin{figure}
+\includegraphics[width=1\linewidth]{./PRISMA} \caption{PRISMA-like flow diagram for the identified preregistrations that were included in the data analysis. Note that the sum is greater than the total number of excluded registrations because an individual registration can be excluded for multiple reasons.}\label{fig:PRISMA}
+\end{figure}
 
-\begin{table*}[tbp]
+The number of included registrations in the sample is summarized in Table \ref{tab:table-included}. We originally included 176 registrations. After excluding 7 registrations based on email responses for being student projects, performed without the goal of publishing the data, or part of a multi-lab project, our final sample size consists of 169 registrations. Of these, 89 registrations were categorized as manually opened and 80 registrations were categorized as automatically opened. An overview of how often registrations were excluded for each of the 6 inclusion criteria is provided in Table \ref{tab:table-excluded}.
+
+\begin{table}[tbp]
 
 \begin{center}
 \begin{threeparttable}
@@ -246,17 +260,17 @@ The number of included and excluded registrations in the sample is summarized in
 \toprule
  & \multicolumn{1}{c}{Included Before Emails} & \multicolumn{1}{c}{Included After Emails}\\
 \midrule
-Manually Opened (n = 164) & 90 (54.88\%) & 88 (53.66\%)\\
-Automatically Opened (n = 151) & 86 (56.95\%) & 81 (53.64\%)\\
+Manually Opened (n = 169) & 91 (53.85\%) & 89 (52.66\%)\\
+Automatically Opened (n = 146) & 85 (58.22\%) & 80 (54.79\%)\\
 \bottomrule
 \end{tabular}
 
 \end{threeparttable}
 \end{center}
 
-\end{table*}
+\end{table}
 
-\begin{table*}[tbp]
+\begin{table}[tbp]
 
 \begin{center}
 \begin{threeparttable}
@@ -268,11 +282,11 @@ Automatically Opened (n = 151) & 86 (56.95\%) & 81 (53.64\%)\\
  & \multicolumn{1}{c}{Manually Opened} & \multicolumn{1}{c}{Automatically Opened}\\
 \midrule
 Withdrawn & 1 & 5\\
-No Research Study & 21 & 50\\
+No Research Study & 22 & 49\\
 No Unique Study & 13 & 5\\
-No Registration & 27 & 20\\
+No Registration & 30 & 17\\
 Registered Report & 13 & 3\\
-Replication Project & 12 & 1\\
+Replication Project & 13 & 0\\
 \bottomrule
 \addlinespace
 \end{tabular}
@@ -284,55 +298,84 @@ Replication Project & 12 & 1\\
 \end{threeparttable}
 \end{center}
 
-\end{table*}
+\end{table}
 
-\emph{Identifying Publications Corresponding to Registrations}: We attempted to find a publication (e.g., a journal article, preprint, thesis, or scientific poster) associated with each registration included in the analysis. Ideally, it is possible to find a publication associated with a registration without the help of the researchers who performed the study. In practice, due to the often limited information included in a registration on the OSF, information provided by the researchers improved our ability to classify registrations as publicly shared or not. If a publication could be found that provided a direct link to the OSF we could be certain that we found the publication corresponding to the registration. In many cases, especially when registrations on the OSF contained little information (see the supplement for details on how much information registrations contained), and publications did not link to a registration on the OSF, there was some uncertainty about whether a paper corresponded to a registration. Furthermore, if no publication could be found, there always remained the possibility that we failed to find it. Based on an extensive search (for details, see the online supplement) we classified 68 out of the 169 registrations as published, 71 registrations as unpublished, and for 30 registrations we were uncertain about whether the registration was published. We remained uncertain when, for example, there was very little information in the preregistration, and the information that was available seemed related to a paper without a link to an OSF registration.
+\emph{Identifying Publications Corresponding to Registrations}: We attempted to find a publication (e.g., a journal article, preprint, thesis, or scientific poster) associated with each registration included in the analysis. Ideally, it is possible to find a publication associated with a registration without the help of the researchers who performed the study. In practice, due to the often limited information included in a registration on the OSF, information provided by the researchers improved our ability to classify registrations as publicly shared or not. If a publication could be found that provided a direct link to the OSF we could be certain that we found the publication corresponding to the registration. In many cases, especially when registrations on the OSF contained little information (see the supplement for details on how much information registrations contained), and publications did not link to a registration on the OSF, there was some uncertainty about whether a paper corresponded to a registration. Furthermore, if no publication could be found, it remains uncertain if the study was not publicly shared (a true negative) or if we failed to find it (a false negative).
 
-For all registrations where we were uncertain about whether a publication corresponded to the registration we attempted to retrieve contact information of researchers involved, and contacted the researchers. We also contacted researchers associated with all registrations classified after an extensive search as unpublished, to check if the registration was indeed unpublished, and if so, ask the researchers why the study remained unpublished. We contacted 109 researchers, 29 researchers with registrations associated with public OSF projects and 80 researchers with registrations associated with closed OSF projects, of which 24 (82.76\%) and 53 (66.25\%) replied to our questions with additional information to update our classification. We sent one email for a registration classified as published because we found a thesis in a repository to check if a paper had been published (and received one response), for one registration we did not have to email the researcher because we could retrieve the required information from a paper in which they explicitly discussed their file drawer (\protect\hyperlink{ref-van_elk_whats_2021}{van Elk, 2021}), 77 emails for registrations we believed remained unpublished (and received 51 responses), and 31 emails because we were uncertain if they were published or not (and received 25 responses). Two additional researchers replied to our email, but did not give consent to use their replies in our data analysis, and we therefore did not change the classification of these two registrations.
-
-After updating our classification based on responses the publication rate in group 1 increased by 6\% (meaning that we failed to identify some publications corresponding to registrations) while the publication rate in group 2 decreased by 1\%. Sometimes a publication we found in the literature did not belong to the registration. If the study associated with the registration was published in another source than the one we identified, the classification remained the same, but we still counted this registration as a mismatch because we failed to identify the correct article without the help of the researchers. In total, 48 of the 76 responses matched with publications we found. For the 50 registrations we classified as unpublished, responses to the follow-up emails indicated that 36 (72\%) were unpublished, while for 14 (28\%) we failed to identify the published paper based on the information in the registration. Most of the mismatches occurred when we were uncertain about whether a paper we found included the registered study because there was no link to the registration on the OSF and only some terminology in the registration and article overlapped. For the 25 registrations where we were uncertain if the study was published, 11 (44\%) of registrations matched a paper we found. Of the 14 (56\%) cases in this group that were a mismatch, 2 were indeed published but we failed to find the correct paper, and the remaining 12 were actually not published. In one special case the paper we found was indeed a match, but we decided to change the final classification to unpublished as the registration belonged to two studies and only one of the registered studies was published. Altogether, these results indicate that without contacting the researchers it is often difficult to determine whether a registration is published based exclusively on the information researchers provide in their registration on the OSF.
-
-Due to non-response to our emails there is remaining uncertainty about the number of registrations in our sample that were eventually published. The 26 non-responses related to registrations where we could not find a publication might contain some publications that we missed, and the 6 non-responses related to registrations where we remained uncertain similarly contain some published and some unpublished studies. Researchers might be more likely to reply when their registration is actually published, or non-response might be unaffected by the publication status of their registration. Under this latter (more conservative) assumption, we can use the observed percentages of published studies in both categories to predict that responses from researchers would have told us that 6.55 out of 26 registrations in the unpublished classification and 2.97 out of 6 registrations in the uncertain classification are actually published (see supplement for details).
-
-\begin{table*}[tbp]
+\begin{table}[tbp]
 
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:table-estimated-nonpublication}Estimated number of published and unpublished studies registered on the OSF before November 2017.}
+\caption{\label{tab:publicationtype}Type of document that matched the registration for all registrations that were publicly shared}
 
-\begin{tabular}{lllllll}
+\begin{tabular}{llll}
 \toprule
-Group & \multicolumn{1}{c}{Registrations} & \multicolumn{1}{c}{\% Included} & \multicolumn{1}{c}{Included} & \multicolumn{1}{c}{\% Published} & \multicolumn{1}{c}{Published} & \multicolumn{1}{c}{Not Published}\\
+ & \multicolumn{1}{c}{Manually Opened} & \multicolumn{1}{c}{Automatically Opened} & \multicolumn{1}{c}{Total}\\
 \midrule
-Manually Opened & 8008 & 54.88 & 4,395 & 85.91 & 3,775 & 619\\
-Automatically Opened & 9042 & 56.95 & 5,150 & 34.47 & 1,775 & 3,375\\
-Total & 17050 &  & 9,544 &  & 5,550 & 3,994\\
+Journal Article & 53 & 16 & 69\\
+Preprint & 13 & 2 & 15\\
+PhD Thesis & 6 & 7 & 13\\
+Poster & 1 & 1 & 2\\
+Report & 0 & 0 & 0\\
+Conference Proceeding & 0 & 0 & 0\\
 \bottomrule
 \end{tabular}
 
 \end{threeparttable}
 \end{center}
 
-\end{table*}
+\end{table}
 
-After incorporating responses from researchers, and extrapolating these responses to the registrations where we did not receive a response (see the supplement for details), we predict that out of a total of 169 included registrations, 103.50 registered studies are published (61.3\%, 95\% CI {[}53.7; 68.3{]}). Our sample contained an almost equal number of manually opened and automatically opened registrations to examine our research question about the consequences of automatically opening registrations after an embargo. As can be seen in Table \ref{tab:table-estimated-nonpublication} manually opened registrations were much more likely to be published than automatically opened registrations, but also somewhat less frequent in the total population of registrations. Multiplying our publication estimates by the estimated number registrations on the OSF before November 2017 that can be classified as an actual research study we find that 5550 registrations are published, and 3994 remain unpublished. Therefore, in the total population of all registrations on the OSF from before November 2017 we estimated that 58.2\%, of registrations are published as an article, preprint, thesis, or poster after at least four years.
+For each registration, we first searched for the combination of the title of the registration and the names of the researchers in Google Scholar and examined the search results. We considered the registration published if it appeared as a journal article, preprint, PhD thesis in a repository, an online report, or conference proceedings. The frequency of each publication type is provided in Table \ref{tab:publicationtype}. When a publication with a similar title was identified, the publication was downloaded and we determined if the publication matched the topic of the registration, was published after the registration date on the OSF, and the OSF users on the registration at least partly overlapped with the researchers of the publication. We also searched the publication for a link to an OSF project page that was associated with the registration. If the publication indeed seemed to be about the same topic and was published after the registration date on the OSF, the study was marked as publicly shared.
 
-\hypertarget{evaluating-the-effect-of-automatically-making-registries-public}{%
-\section{Evaluating the Effect of Automatically Making Registries Public}\label{evaluating-the-effect-of-automatically-making-registries-public}}
+Because titles of the registrations and papers often do not match we continued our search based on the names of the OSF users. For each user associated with a registration we retrieved a list of their publications and scanned through their publications after the registration date. If a document similar to the topic of the registration or in collaboration with some of the other OSF users associated with the registration was found, we again aimed to determine if the publication matched the registration. Whenever we failed to find a publication that seemed to be related to a registration the registration was marked as ``not publicly shared'' in any of the document types outlined above.
 
-We see that 85.9\%, 95\% CI {[}77.1; 91.7{]} of all registrations that based on our proxy were classified as manually opened by the researchers have been published. In the remaining 14.1\% of these registrations researchers have voluntarily chosen to make the registration public, even though the study was not published. This shows that a platform that enables researchers to make their registration public will make studies that would otherwise remain in the file-drawer known to the research community. We estimate that 34.5\%, 95\% CI {[}25; 45.3{]} of automatically opened registrations are published. Consequently, 65.5\% of these registrations would not be known to the research community were it not for the fact that the OSF automatically opens registrations after four years. In other words, automatically opening registrations increases our awareness of all studies that have been performed, above and beyond enabling researchers to create public registrations that they can voluntarily make public.
+Based on an this extensive search we classified 68 out of the 169 registrations as publicly shared, 71 registrations as not publicly shared, and for 30 registrations we were uncertain about whether the registration was publicly shared.
 
-\hypertarget{why-do-studies-remained-unpublished}{%
-\section{Why do studies remained unpublished?}\label{why-do-studies-remained-unpublished}}
+For all registrations where we were uncertain about whether a publication corresponded to the registration we attempted to retrieve contact information of researchers involved (we failed to find contact information in only one case), and contacted the researchers (for the email, see \url{https://osf.io/m3ra2}). Researchers were informed that we would not share individual responses and report answers on an aggregated level. We also contacted researchers associated with all registrations classified after an extensive search as not publicly shared to check if the registration was indeed not shared, and if so, ask the researchers why the study was not shared. We contacted 109 researchers, 30 researchers with registrations associated with public OSF projects and 79 researchers with registrations associated with closed OSF projects, of which 25 (83.33\%) and 52 (65.82\%) replied to our questions with additional information to update our classification. We sent one email for a registration classified as not shared to check if the thesis we found in a repository had been publicly shared (and received one response). For one registration we did not have to email the researcher because we could retrieve the required information from a paper in which they explicitly discussed their file drawer (\citeproc{ref-vanelk_what_2021}{van Elk, 2021}), 77 emails for registrations we believed were not publicly shared (and received 51 responses), and 31 emails because we were uncertain if they were publicly shared or not (and received 25 responses). Two additional researchers replied to our email, but did not give consent to use their replies in our data analysis, and we therefore did not change the classification of these two registrations.
 
-When registrations were classified as unpublished, or when we were uncertain about whether a registration was published, we reached out to the researchers to ask them whether their registration was published or not, and if not, why it remained unpublished. We also asked why they made the corresponding OSF project public or why they kept it private, and if the researchers were aware that the OSF would automatically make their registration public after four years. This study was approved by the ERB at Eindhoven University of Technology under proposal number 1674.
+After updating our classification based on responses the publicly shared rate of the manually opened registrations increased by 6\% (meaning that we failed to identify some public studies corresponding to registrations) while the publicly shared rate of the automatically opened registrations decreased by 1\% (meaning that we incorrectly identified a published study as corresponding to a preregistration). Sometimes a publication we found in the literature did not belong to the registration. If the study associated with the registration was publicly shared in another source than the one we identified, the classification remained the same, but we still counted this registration as a mismatch because we failed to identify the correct article without the help of the researchers. In total, 48 of the 76 responses matched with publicly shared reports we found. For the 50 registrations we classified as not publicly shared, responses to the follow-up emails indicated that 36 (72\%) were not shared, while for 14 (28\%) we failed to identify the publicly shared report based on the information in the registration. Most of the mismatches occurred when we were uncertain about whether a paper we found included the registered study because there was no link to the registration on the OSF and only some terminology in the registration and article overlapped. For the 25 registrations where we were uncertain if the study was publicly shared, 11 (44\%) of registrations matched a paper we found. Of the 14 (56\%) cases in this group that were a mismatch, 2 were indeed publicly shared but we failed to find the correct paper, and the remaining 12 were actually not shared. In one special case the paper we found was indeed a match, but we decided to change the final classification to not shared as the registration belonged to two studies and only one of the registered studies was published. Altogether, these results indicate that without contacting the researchers it is often difficult to determine whether a registration is Publicly shared based exclusively on the information researchers provide in their registration on the OSF.
 
-There can be many reasons why a researcher does not publish a performed study. We classified the responses given by researchers into 5 categories (see Table \ref{tab:table-reasons}, for a more detailed overview, see the online supplement). Researchers indicated that their motivation to not publish was based on (1) logistical issues, such as a lack of time, or a new job on a different research topic or outside of academia (45\%), (2) the results of the study, such as null or unclear results and failed replications (25\%), (3) the review process, such as that the paper was rejected, or that reviewers thought it would be better to leave this study out (20\%), (4) problems with the study design, such as not reaching the intended sample size, or a statistical artifact (5\%), and (5) the goal of the study, which was not publishing the results because the project was educational or intended to be shared with stakeholders (4\%).
+Due to non-response to our emails there is remaining uncertainty about the number of registrations in our sample that were eventually publicly shared. The 26 non-responses related to registrations where we could not find a publication might contain some publications that we missed, and the 6 non-responses related to registrations where we remained uncertain similarly contain some publicly shared and some unpublished studies. Researchers might be more likely to reply when their registration is actually publicly shared, or non-response might be unaffected by the publication status of their registration. Under this latter (more conservative) assumption, we can use the observed percentages of publicly shared studies in both categories to predict that responses from researchers would have told us that 6.60 out of 26 registrations in the unpublished classification and 2.97 out of 6 registrations in the uncertain classification are actually publicly shared (see supplement for details on the calculation). Table \ref{tab:table-estimated-nonpublication} summarizes number of registrations that were assumed to be manually opened or automatically opened, and that were included after the email responses by researchers.
 
-According to the self-reported causes for non-publication researchers shared with us logistical issues are the biggest cause of unpublished studies in our sample. Researchers leave academia and fail to complete a project before their contract ends, move on to a new position with a different research focus, or experience a lack of time to complete this specific project given other responsibilities. Only twice did researchers respond that the project was still in progress, which suggests most projects will not appear in the future, but we did see ongoing research activity in a small number of projects.
+\begin{lltable}
 
-\begin{table*}[tbp]
+\begin{longtable}{lllllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:table-estimated-nonpublication}Descriptives for the sampled registrations, and estimated number of published and unpublished studies registered on the OSF before November 2017.}\\
+\toprule
+Group & \multicolumn{1}{c}{Registrations} & \multicolumn{1}{c}{\% Included} & \multicolumn{1}{c}{Included} & \multicolumn{1}{c}{\% Published} & \multicolumn{1}{c}{Published} & \multicolumn{1}{c}{Not Published}\\
+\midrule
+\endfirsthead
+\caption*{\normalfont{Table \ref{tab:table-estimated-nonpublication} continued}}\\
+\toprule
+Group & \multicolumn{1}{c}{Registrations} & \multicolumn{1}{c}{\% Included} & \multicolumn{1}{c}{Included} & \multicolumn{1}{c}{\% Published} & \multicolumn{1}{c}{Published} & \multicolumn{1}{c}{Not Published}\\
+\midrule
+\endhead
+Manually Opened Sample & 169 & 52.66 & 89 & 84.81 & 75 & 14\\
+Automatically Opened Sample & 146 & 54.79 & 80 & 35.1 & 28 & 52\\
+Total Sample & 315 &  & 169 &  & 104 & 65\\
+Manually Opened Extrapolation & 8008 & 52.66 & 4,217 & 84.81 & 3,577 & 641\\
+Automatically Opened Extrapolation & 9042 & 54.79 & 4,955 & 35.1 & 1,739 & 3,215\\
+Total Extrapolation & 17050 &  & 9,172 &  & 5,316 & 3,856\\
+\bottomrule
+\end{longtable}
+
+\end{lltable}
+
+After incorporating responses from researchers, and extrapolating these responses to the registrations for which we remained uncertain if they were published because we did not receive a response (see the supplement for details on the calculation used to resolve the classification for registrations we remained uncertain about), we predict that out of a total of 169 included registrations, 103.60 registered studies are publicly shared (61.3\%, 95\% CI {[}53.8; 68.3{]}). Our sample contained an almost equal number of manually opened and automatically opened registrations to examine our research question about the consequences of automatically opening registrations after an embargo. As can be seen in Table \ref{tab:table-estimated-nonpublication} manually opened registrations were much more likely to be publicly shared than automatically opened registrations. Manually opened registrations were also somewhat less frequent in the total population of registrations compared to automatically opened registrations. Multiplying our publication estimates by the estimated number of registrations on the OSF before November 2017 that can be classified as an actual research study we estimate by extrapolation that 104 registrations are publicly shared, and 65 remain unpublished. Therefore, in the total population of all registrations on the OSF from before November 2017 we estimated that 61.5\% of registrations are publicly shared as an article, preprint, thesis, or poster after at least four years. This extrapolation is based on a simple model which only incorporates difference between manually and automatically opened preregistrations in how often projects are publicly shared, and is based on an estimate of the amount of actual research studies. The extrapolation therefore comes with considerable remaining uncertainty about the true percentages in the population.
+
+\section{Evaluating the Effect of Automatically Making Registries Public}\label{evaluating-the-effect-of-automatically-making-registries-public}
+
+We see that 84.8\%, 95\% CI {[}75.9; 90.8{]} of all registrations that based on our proxy were classified as manually opened by the researchers have been published. In the remaining 15.2\% of these registrations researchers have voluntarily chosen to make the registration public, even though the study was not publicly shared. This shows that a platform that enables researchers to make their registration public will make studies that would otherwise remain in the file-drawer known to the research community. We estimate that 35.1\%, 95\% CI {[}25.5; 46{]} of automatically opened registrations are publicly shared. Consequently, 64.9\% of these registrations would not be known to the research community were it not for the fact that the OSF automatically opens registrations after four years. In other words, automatically opening registrations increases our awareness of all studies that have been performed, above and beyond enabling researchers to create public registrations that they can voluntarily make public.
+
+\section{Why do studies remained unpublished?}\label{why-do-studies-remained-unpublished}
+
+When registrations were classified as unpublished, or when we were uncertain about whether a registration was publicly shared, we reached out to the researchers to ask them whether their registration was publicly shared or not, and if not, why it remained unpublished. We also asked why they made the corresponding OSF project public or why they kept it private, and if the researchers were aware that the OSF would automatically make their registration public after four years. This study was approved by the ERB at Eindhoven University of Technology under proposal number 1674.
+
+There can be many reasons why a researcher does not share a performed study. We classified the responses given by researchers into 5 categories (see Table \ref{tab:table-reasons}, for a more detailed overview, see the online supplement). As not all participants responded, systematic reasons for not responding (such as not wanted to admit that results remained unpublished because non-significant results were obtained) lead to bias in our estimates. Due to the presence of response bias and the small sample size, estimates should be interpreted with substantial uncertainty, and we consider the identified themes the most important contribution of these results. Researchers indicated that their motivation to not publish was based on (1) logistical issues, such as a lack of time, or a new job on a different research topic or outside of academia (45\%), (2) the results of the study, such as null or unclear results and failed replications (25\%), (3) the review process, such as that the paper was rejected, or that reviewers thought it would be better to leave this study out (20\%), (4) problems with the study design, such as not reaching the intended sample size, or a statistical artifact (5\%), and (5) the goal of the study, which was not publishing the results because the project was educational or intended to be shared with stakeholders (4\%). These reasons are similar to those observed in the inception cohort study by Cooper, DeNeve, and Charlton (\citeproc{ref-cooper_finding_1997}{1997}). Only twice did researchers respond that the project was still in progress, which suggests most projects will not appear in the future, but we did see ongoing research activity in a small number of projects.
+
+\begin{table}[tbp]
 
 \begin{center}
 \begin{threeparttable}
@@ -345,7 +388,7 @@ According to the self-reported causes for non-publication researchers shared wit
 \midrule
 Logistical Issues & 7 & 18 & 25\\
 Results & 3 & 11 & 14\\
-Peer Review & 6 & 5 & 11\\
+Peer Review & 7 & 4 & 11\\
 Study Design & 1 & 2 & 3\\
 Not Goal to Publish & 0 & 2 & 2\\
 \bottomrule
@@ -359,112 +402,118 @@ Not Goal to Publish & 0 & 2 & 2\\
 \end{threeparttable}
 \end{center}
 
-\end{table*}
+\end{table}
 
-When asked why researchers made their OSF project page open, most researchers (18 out of 23) mentioned a motivation to practice open science. Out of 43 responses more diverse reasons were given for keeping the OSF project closed, such as that there was no relevant information stored in the project (15 times), researchers forgot to open it (11 times), researchers were waiting until a project was published (6 times), or they experienced technical issues (4 times). For more details, see the online supplement. Finally, we were interested in how many researchers who registered on the OSF before 2017 were aware of the OSF policy to automatically open all registrations after four years. Although not all researchers answered this question, 24 of the researchers indicated they were aware of this policy, and 14 were not aware of this policy.
+When asked why researchers made their OSF project page open, most researchers (18 out of 23) mentioned a motivation to practice open science. When asked why researchers kept their OSF project page closed, more diverse reasons were given, such as that there was no relevant information stored in the project (15 times out of 43 responses), researchers forgot to open it (11 times), researchers were waiting until a project was publicly shared (6 times), or they experienced technical issues (4 times). For more details on these motivations, see the online supplement. Finally, we were interested in how many researchers who registered on the OSF before 2017 were aware of the OSF policy to automatically open all registrations after four years. Although not all researchers answered this question, 24 of the researchers indicated they were aware of this policy, and 14 were not aware of this policy.
 
-\hypertarget{discussion}{%
-\section{Discussion}\label{discussion}}
+\section{Discussion}\label{discussion}
 
-Our examination of 169 registrations led to an estimated publication rate of 58.2\% for all registrations on the Open Science framework that were created before November 18, 2017. Extrapolating from our sample to the population of all registrations up to November 2017, we estimate that of the 9544 registered research studies on the OSF that met our inclusion criteria, 3994 remain unpublished. Our study provides an important data point to understand how many studies are performed, but remain unpublished. The possibility that around 41.8\% of research studies registered on the OSF (excluding multi-lab studies and Registered Reports) are not shared should make scientists reflect on the efficiency of scientific research. Although not all unreported studies necessarily reflect research waste, and science will never be perfectly efficient, our results suggest scientists might need to seriously engage with the question how internal inefficiency can be reduced (\protect\hyperlink{ref-bernal_social_1939}{Bernal, 1939}; \protect\hyperlink{ref-chalmers_avoidable_2009}{Chalmers \& Glasziou, 2009}).
+Our examination of 169 registrations led to an estimated publication rate of 61.5\% for all registrations on the Open Science framework that were created before November 18, 2017. Extrapolating from our sample to the population of all registrations up to November 2017, we estimate that of the 169 registered research studies on the OSF that met our inclusion criteria, 65 remain unpublished. Our study provides an important data point to understand how many studies are performed, but remain unpublished, as it is the first prospective cohort study to estimate this based on a voluntary study registry. The possibility that around 38.5\% of research studies registered on the OSF (excluding multi-lab studies and Registered Reports) are not shared should make scientists reflect on the efficiency of scientific research. Although not all unreported studies necessarily reflect research waste, and science will never be perfectly efficient, our results suggest scientists might need to seriously engage with the question how internal inefficiency can be reduced (\citeproc{ref-bernal_social_1939}{Bernal, 1939}; \citeproc{ref-chalmers_avoidable_2009}{Chalmers \& Glasziou, 2009}).
 
-The main reason researchers give when asked why their studies remain unpublished are logistical issues related to a lack of time, or responsible researchers moving on to a new job. Better time-management, designing projects from the outset in a way that they can be completed by other team members, or making unfinished projects available to potential collaborators could mitigate these issues. The fact that for 25\% of unpublished studies researchers indicated that the reason that the study remained unpublished is due to the results (e.g., null results or failed replications) is concerning, and considered unacceptable by the general public (\protect\hyperlink{ref-bottesini_what_2022}{Bottesini, Rhemtulla, \& Vazire, 2022}; \protect\hyperlink{ref-pickett_questionable_2017}{Pickett \& Roche, 2017}). It is probable that the absence of these studies contributes to publication bias in the scientific literature. Researchers can prevent the results of a study from influencing the probability that their study will be published by submitting their registration as a Registered Report (\protect\hyperlink{ref-chambers_past_2022}{Chambers \& Tzavella, 2022}; \protect\hyperlink{ref-nosek_registered_2014}{Nosek \& Lakens, 2014}). If researchers do not report failed replications it is impossible to correct false positive claims in the scientific literature (\protect\hyperlink{ref-schmidt_shall_2009}{Schmidt, 2009}), and if null-results remain unreported effect size estimates in meta-analyses will be inflated (\protect\hyperlink{ref-egger_bias_1997}{Egger, Davey Smith, Schneider, \& Minder, 1997}).
+The main reason researchers give when asked why their studies remain unpublished are logistical issues related to a lack of time, or responsible researchers moving on to a new job. Better time-management, designing projects from the outset in a way that they can be completed by other team members, or making unfinished projects available to potential collaborators could mitigate these issues. The fact that for 25\% of unpublished studies researchers indicated that the reason that the study remained unpublished is due to the results (e.g., null results or failed replications) is concerning, and considered unacceptable by the general public (\citeproc{ref-bottesini_what_2022}{Bottesini, Rhemtulla, \& Vazire, 2022}; \citeproc{ref-pickett_questionable_2017}{Pickett \& Roche, 2017}). It is probable that the absence of these studies contributes to publication bias in the scientific literature. Researchers can prevent the results of a study from influencing the probability that their study will be published by submitting their registration as a Registered Report (\citeproc{ref-chambers_present_2022}{Chambers \& Tzavella, 2022}; \citeproc{ref-nosek_registered_2014}{Nosek \& Lakens, 2014}). If researchers do not report failed replications it is impossible to correct false positive claims in the scientific literature (\citeproc{ref-schmidt_shall_2009}{Schmidt, 2009}), and if null-results remain unreported effect size estimates in meta-analyses will be inflated (\citeproc{ref-egger_bias_1997}{Egger, Davey Smith, Schneider, \& Minder, 1997}).
 
-Our estimate has remaining uncertainty as some registrations for which authors did not respond to our email might be classified incorrectly. Furthermore, the estimate is specific to the context of our study, which were all registrations on the OSF created before November 18, 2017. Users of the OSF in these years are early adopters interested in open science practices, and the likelihood they share a study might differ from researchers who do not use the OSF. Our estimate might not generalize to non-registered studies, nor to educational research projects. The estimate might also change over time (e.g., more studies might have remained unpublished during the COVID pandemic). In short, the exact percentage of studies that remain unpublished will be different in other contexts.
+Our estimate has remaining uncertainty as some registrations for which authors did not respond to our email might be classified incorrectly. Furthermore, the estimate is specific to the context of our study, which were all registrations on the OSF created before November 18, 2017. Users of the OSF in these years are early adopters interested in open science practices, and the likelihood they share a study might differ from researchers who do not use the OSF. Our estimate might not generalize to non-registered studies, nor to educational research projects. The estimate might also change over time (e.g., more studies might have remained unpublished during the COVID pandemic). In short, the exact percentage of studies that remain unpublished will be different in other contexts, such as when registration is not voluntary, when preregistration spreads beyond early adopters, and when the OSF is used more by other disciplines beyond psychology (\citeproc{ref-vandenakker_selective_2023}{Van den Akker, van Assen, et al., 2023}). At the same time, complementing previous studies (\citeproc{ref-franco_publication_2014}{Franco et al., 2014}; \citeproc{ref-ofosu_preanalysis_2023}{Ofosu \& Posner, 2023}) this study provides converging support for the hypothesis that a substantial amount of research projects are not publicly shared.
 
-At the same time, the factors that cause researchers not to publish results (e.g., a lack of time, responsible researchers leaving academia, null results, rejections during peer review) play a role in many (if not all) scientific contexts. It should be noted that in fields where results of studies have a high probability of becoming known (e.g., through a requirement to update registrations with the outcome), where researchers work in larger teams where one team member takes over the work of a colleague who leaves academia, and where all studies are designed to have a high probability to yield informative results, there might be less reason to be concerned about the number of unpublished studies. Our study demonstrates that the percentage of unpublished studies can be high. Empirically examining the size of the file drawer can determine where there is room for improvement.
+At the same time, the factors that cause researchers not to publish results (e.g., a lack of time, responsible researchers leaving academia, null results, rejections during peer review) play a role in many (if not all) scientific contexts. It should be noted that in fields where results of studies have a high probability of becoming known (e.g., through a requirement to update registrations with the outcome), where researchers work in larger teams where one team member takes over the work of a colleague who leaves academia, and where all studies are designed to have a high probability to yield informative results, there might be less reason to be concerned about the number of unpublished studies.
 
-\emph{Recommendations for Registries}. We found that the OSF is not only used to (pre)register a study, but also to create a stable archive after a study has been completed. To be able to distinguish these uses of registries, different categories of registrations could be created (e.g., distinguishing `preregistration' from `data archiving', with perhaps an additional category for `educational projects'). It would be useful for meta-scientific research if the API that allows researchers to access data from the registry made it possible to retrieve whether a registration was made public manually or automatically by the OSF. Lastly, the OSF currently displays registrations of separate components of the same project as unique registrations. It would be clearer if one could identify when registrations of components are part of the registration of the overarching project.
+\emph{Recommendations for Registries}. We found that the OSF is not only used to (pre)register a study, but also to create a stable archive after a study has been completed. To be able to distinguish these uses of registries, different categories of registrations could be created (e.g., distinguishing `preregistration' from `data archiving', with perhaps an additional category for `educational projects'). It would be useful for meta-scientific research if the API that allows researchers to access data from the registry made it possible to retrieve whether a registration was made public manually or automatically by the OSF. Lastly, the OSF currently displays registrations of separate components of the same project as unique registrations. It would be clearer if one could identify when registrations of components are part of the registration of the overarching project. We cannot draw causal conclusions about the consequences of a policy to automatically open registrations after 4 years, beyond the observation in our sample that it made projects known to peers that were not publicly shared in other ways. Future research could examine the consequences of different policies with respect to whether registrations are automatically made public after an embargo, or remain closed indefinitely.
 
-\emph{Recommendations for Registry Users}. Researchers should be aware that the OSF only makes the registration public, but not the main project page. This means that, for example, in the ``OSF-Standard Pre-Data Collection Registration'' the only information that becomes visible is the answer to the question ``Has data collection begun for this project?'', the answer to the question ``Have you looked at the data?'', and the text in the field ``Other comments''. Some users wrote in this field ``See the preregistration document specifying the logic, hypotheses, and analyses'' but those files are not made accessible when the registration is made public after four years. If researchers want to use registrations to inform peers about a study they have performed, they will need to provide all relevant information in the ``Other comments'' field. It is recommended to follow a comprehensive preregistration template to increase the quality of the preregistration (\protect\hyperlink{ref-akker_effectiveness_2023}{Akker et al., 2023}) and to create machine-readable analysis code that describes when statistical hypotheses are corroborated or falsified (\protect\hyperlink{ref-lakens_improving_2021}{Lakens \& DeBruine, 2021}). Finally, it would be useful if researchers include contact information such that peers can reach out to them with inquiries about the study that was performed. Adding an ORCID ID (for example to your OSF profile) and an email address (while realizing that researchers do not stay at the same institution indefinitely) is good practice.
+\emph{Recommendations for Registry Users}. Researchers should be aware that the OSF only makes the registration public, but not the main project page. This means that, for example, in the ``OSF-Standard Pre-Data Collection Registration'' the only information that becomes visible is the answer to the question ``Has data collection begun for this project?'', the answer to the question ``Have you looked at the data?'', and the text in the field ``Other comments''. Some users wrote in this field ``See the preregistration document specifying the logic, hypotheses, and analyses'' but those files are not made accessible when the registration is made public after four years. If researchers want to use registrations to inform peers about a study they have performed, they will need to provide all relevant information in the ``Other comments'' field. Osofu and Posner (-Ofosu and Posner (\citeproc{ref-ofosu_preanalysis_2023}{2023})) found that 38\% of researchers already use study registries to learn about whether studies on a specific topic have already been planned or performed, and we can expect this number to increase as preregistration has become more popular. Providing more details about planned studies would facilitate their discovery by peers who search through study registries. It is recommended to follow a comprehensive preregistration template to increase the quality of the preregistration (\citeproc{ref-vandenakker_effectiveness_2023}{Van den Akker, Bakker, et al., 2023}) and to create machine-readable analysis code that describes when statistical hypotheses are corroborated or falsified (\citeproc{ref-lakens_improving_2021}{Lakens \& DeBruine, 2021}). Finally, it would be useful if researchers include contact information such that peers can reach out to them with inquiries about the study that was performed. Adding an ORCID ID (for example to your OSF profile) and an email address (while realizing that researchers do not stay at the same institution indefinitely) is good practice.
 
-\hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section{Conclusion}\label{conclusion}
 
-A substantial amount of data that researchers collect is never publicly shared. Every system will have some inefficiencies, and researchers will differ in their views about when a file drawer is too large (\protect\hyperlink{ref-dickersin_factors_1992}{Dickersin et al., 1992}). What is perhaps most surprising is that researchers rarely talk about how many studies they have collected that could have value for peers, and yet linger in their file drawer. Researchers might find it uncomfortable to honestly discuss this topic because unpublished studies are strongly associated with bias, but our results suggest that logistical issues are a more likely reason for non-publication. More transparency about unpublished studies would allow academics to learn where they can improve the way they work, thereby increasing the efficiency of scientific research.
+A substantial amount of data that researchers collect is never publicly shared. Every system will have some inefficiencies, and researchers will differ in their views about when a file drawer is too large (\citeproc{ref-dickersin_factors_1992}{Dickersin et al., 1992}). What is perhaps most surprising is that researchers rarely talk about how many studies they have collected that could have value for peers, and yet linger in their file drawer. Researchers might find it uncomfortable to honestly discuss this topic because unpublished studies are strongly associated with bias, but our results suggest that logistical issues are a more likely reason for non-publication. More transparency about unpublished studies would allow academics to learn where they can improve the way they work, thereby increasing the efficiency of scientific research.
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
 \begingroup
 
 \interlinepenalty = 10000
 
-\hypertarget{refs}{}
+\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-akker_effectiveness_2023}{}}%
-Akker, O. van den, Bakker, M., Assen, M. A. L. M. van, Pennington, C. R., Verweij, L., Elsherif, M., \ldots{} Wicherts, J. (2023). \emph{The effectiveness of preregistration in psychology: {Assessing} preregistration strictness and preregistration-study consistency}. {MetaArXiv}. \url{https://doi.org/10.31222/osf.io/h8xjw}
-
-\leavevmode\vadjust pre{\hypertarget{ref-allen_open_2019}{}}%
+\bibitem[\citeproctext]{ref-allen_open_2019}
 Allen, C., \& Mehler, D. M. A. (2019). Open science challenges, benefits and tips in early career and beyond. \emph{PLOS Biology}, \emph{17}(5), e3000246. \url{https://doi.org/10.1371/journal.pbio.3000246}
 
-\leavevmode\vadjust pre{\hypertarget{ref-bernal_social_1939}{}}%
-Bernal, J. D. (1939). \emph{The social function of science}. {London}: {Routledge}.
+\bibitem[\citeproctext]{ref-bernal_social_1939}
+Bernal, J. D. (1939). \emph{The social function of science}. London: Routledge. Retrieved from \url{http://archive.org/details/in.ernet.dli.2015.188098}
 
-\leavevmode\vadjust pre{\hypertarget{ref-bottesini_what_2022}{}}%
+\bibitem[\citeproctext]{ref-bottesini_what_2022}
 Bottesini, J. G., Rhemtulla, M., \& Vazire, S. (2022). What do participants think of our research practices? {An} examination of behavioural psychology participants' preferences. \emph{Royal Society Open Science}, \emph{9}(4), 200048. \url{https://doi.org/10.1098/rsos.200048}
 
-\leavevmode\vadjust pre{\hypertarget{ref-buxton_avoiding_2021}{}}%
+\bibitem[\citeproctext]{ref-buxton_avoiding_2021}
 Buxton, R. T., Nyboer, E. A., Pigeon, K. E., Raby, G. D., Rytwinski, T., Gallagher, A. J., \ldots{} Roche, D. G. (2021). Avoiding wasted research resources in conservation science. \emph{Conservation Science and Practice}, \emph{3}(2), e329. \url{https://doi.org/10.1111/csp2.329}
 
-\leavevmode\vadjust pre{\hypertarget{ref-chalmers_avoidable_2009}{}}%
+\bibitem[\citeproctext]{ref-chalmers_avoidable_2009}
 Chalmers, I., \& Glasziou, P. (2009). Avoidable waste in the production and reporting of research evidence. \emph{The Lancet}, \emph{374}(9683), 86--89. \url{https://doi.org/DOI:10.1016/S01406736(09)60329-9}
 
-\leavevmode\vadjust pre{\hypertarget{ref-chambers_past_2022}{}}%
-Chambers, C. D., \& Tzavella, L. (2022). The past, present and future of {Registered Reports}. \emph{Nature Human Behaviour}, \emph{6}(1), 29--42. \url{https://doi.org/10.1038/s41562-021-01193-7}
+\bibitem[\citeproctext]{ref-chambers_present_2022}
+Chambers, C. D., \& Tzavella, L. (2022). The past, present and future of {Registered Reports}. \emph{Nature Human Behaviour}, \emph{6}(1, 1), 29--42. \url{https://doi.org/10.1038/s41562-021-01193-7}
 
-\leavevmode\vadjust pre{\hypertarget{ref-dickersin_factors_1992}{}}%
+\bibitem[\citeproctext]{ref-cooper_finding_1997}
+Cooper, H., DeNeve, K., \& Charlton, K. (1997). Finding the missing science: {The} fate of studies submitted for review by a human subjects committee. \emph{Psychological Methods}, \emph{2}(4), 447--452. \url{https://doi.org/10.1037/1082-989X.2.4.447}
+
+\bibitem[\citeproctext]{ref-dickersin_factors_1992}
 Dickersin, K., Min, Y. I., \& Meinert, C. L. (1992). Factors influencing publication of research results. {Follow-up} of applications submitted to two institutional review boards. \emph{JAMA}, \emph{267}(3), 374--378. \url{https://doi.org/10.1001/jama.1992.03480210049019}
 
-\leavevmode\vadjust pre{\hypertarget{ref-dickersin_evolution_2012}{}}%
+\bibitem[\citeproctext]{ref-dickersin_evolution_2012}
 Dickersin, K., \& Rennie, D. (2012). The evolution of trial registries and their use to assess the clinical trial enterprise. \emph{JAMA}, \emph{307}(17), 1861--1864. \url{https://doi.org/10.1001/jama.2012.4230}
 
-\leavevmode\vadjust pre{\hypertarget{ref-easterbrook_publication_1991}{}}%
+\bibitem[\citeproctext]{ref-easterbrook_publication_1991}
 Easterbrook, P. J., Berlin, J. A., Gopalan, R., \& Matthews, D. R. (1991). Publication bias in clinical research. \emph{Lancet (London, England)}, \emph{337}(8746), 867--872. \url{https://doi.org/10.1016/0140-6736(91)90201-y}
 
-\leavevmode\vadjust pre{\hypertarget{ref-egger_bias_1997}{}}%
+\bibitem[\citeproctext]{ref-egger_bias_1997}
 Egger, M., Davey Smith, G., Schneider, M., \& Minder, C. (1997). Bias in meta-analysis detected by a simple, graphical test. \emph{BMJ (Clinical Research Ed.)}, \emph{315}(7109), 629--634. \url{https://doi.org/10.1136/bmj.315.7109.629}
 
-\leavevmode\vadjust pre{\hypertarget{ref-franco_publication_2014}{}}%
+\bibitem[\citeproctext]{ref-franco_publication_2014}
 Franco, A., Malhotra, N., \& Simonovits, G. (2014). Publication bias in the social sciences: {Unlocking} the file drawer. \emph{Science}, \emph{345}(6203), 1502--1505. \url{https://doi.org/10.1126/SCIENCE.1255484}
 
-\leavevmode\vadjust pre{\hypertarget{ref-gerber_publication_2010}{}}%
+\bibitem[\citeproctext]{ref-gerber_publication_2010}
 Gerber, A. S., Malhotra, N., Dowling, C. M., \& Doherty, D. (2010). Publication bias in two political behavior literatures. \emph{American Politics Research}, \emph{38}(4), 591--613. \url{https://doi.org/10.1177/1532673X09350979}
 
-\leavevmode\vadjust pre{\hypertarget{ref-greenwald_consequences_1975}{}}%
+\bibitem[\citeproctext]{ref-greenwald_consequences_1975}
 Greenwald, A. G. (1975). Consequences of prejudice against the null hypothesis. \emph{Psychological Bulletin}, \emph{82}(1), 1--20. \url{https://doi.org/10.1037/h0076157}
 
-\leavevmode\vadjust pre{\hypertarget{ref-lakens_improving_2021}{}}%
+\bibitem[\citeproctext]{ref-lakens_improving_2021}
 Lakens, D., \& DeBruine, L. M. (2021). Improving transparency, falsifiability, and rigor by making hypothesis tests machine-readable. \emph{Advances in Methods and Practices in Psychological Science}, \emph{4}(2), 2515245920970949. \url{https://doi.org/10.1177/2515245920970949}
 
-\leavevmode\vadjust pre{\hypertarget{ref-lishner_sorting_2021}{}}%
+\bibitem[\citeproctext]{ref-lishner_sorting_2021}
 Lishner, D. A. (2021). Sorting the file drawer: {A} typology for describing unpublished studies. \emph{Perspectives on Psychological Science}, 1745691620979831. \url{https://doi.org/10.1177/1745691620979831}
 
-\leavevmode\vadjust pre{\hypertarget{ref-nosek_registered_2014}{}}%
+\bibitem[\citeproctext]{ref-nosek_registered_2014}
 Nosek, B. A., \& Lakens, D. (2014). Registered reports: {A} method to increase the credibility of published results. \emph{Social Psychology}, \emph{45}(3), 137--141. \url{https://doi.org/10.1027/1864-9335/a000192}
 
-\leavevmode\vadjust pre{\hypertarget{ref-pickett_questionable_2017}{}}%
+\bibitem[\citeproctext]{ref-ofosu_preanalysis_2023}
+Ofosu, G. K., \& Posner, D. N. (2023). Pre-{Analysis Plans}: {An Early Stocktaking}. \emph{Perspectives on Politics}, \emph{21}(1), 174--190. \url{https://doi.org/10.1017/S1537592721000931}
+
+\bibitem[\citeproctext]{ref-pickett_questionable_2017}
 Pickett, J. T., \& Roche, S. P. (2017). Questionable, objectionable or criminal? {Public} opinion on data fraud and selective reporting in science. \emph{Science and Engineering Ethics}, 1--21. \url{https://doi.org/10.1007/s11948-017-9886-2}
 
-\leavevmode\vadjust pre{\hypertarget{ref-rosenthal_file_1979}{}}%
+\bibitem[\citeproctext]{ref-rosenthal_file_1979}
 Rosenthal, R. (1979). The file drawer problem and tolerance for null results. \emph{Psychological Bulletin}, \emph{86}(3), 638--641. https://doi.org/\href{https://\%20doi.org/10.1037/0033-2909.86.3.638}{https:// doi.org/10.1037/0033-2909.86.3.638}
 
-\leavevmode\vadjust pre{\hypertarget{ref-scheel_excess_2021}{}}%
+\bibitem[\citeproctext]{ref-scheel_excess_2021}
 Scheel, A. M., Schijen, M. R. M. J., \& Lakens, D. (2021). An excess of positive results: {Comparing} the standard psychology literature with registered reports. \emph{Advances in Methods and Practices in Psychological Science}, \emph{4}(2), 25152459211007467. \url{https://doi.org/10.1177/25152459211007467}
 
-\leavevmode\vadjust pre{\hypertarget{ref-schmidt_shall_2009}{}}%
+\bibitem[\citeproctext]{ref-schmidt_shall_2009}
 Schmidt, S. (2009). Shall we really do it again? {The} powerful concept of replication is neglected in the social sciences. \emph{Review of General Psychology}, \emph{13}(2), 90--100. \url{https://doi.org/10.1037/a0015108}
 
-\leavevmode\vadjust pre{\hypertarget{ref-song_dissemination_2010}{}}%
+\bibitem[\citeproctext]{ref-song_dissemination_2010}
 Song, F., Parekh, S., Hooper, L., Loke, Y. K., Ryder, J., Sutton, A. J., \ldots{} Harvey, I. (2010). Dissemination and publication of research findings: An updated review of related biases. \emph{Health Technology Assessment (Winchester, England)}, \emph{14}(8), iii, ix--xi, 1--193. \url{https://doi.org/10.3310/hta14080}
 
-\leavevmode\vadjust pre{\hypertarget{ref-spies_open_2013}{}}%
-Spies, J. R. (2013). \emph{The open science framework: {Improving} science by making it open and accessible}. {University of Virginia}.
+\bibitem[\citeproctext]{ref-spies_open_2013}
+Spies, J. R. (2013). \emph{The open science framework: {Improving} science by making it open and accessible}. University of Virginia.
 
-\leavevmode\vadjust pre{\hypertarget{ref-sterling_publication_1959}{}}%
+\bibitem[\citeproctext]{ref-sterling_publication_1959}
 Sterling, T. D. (1959). Publication decisions and their possible effects on inferences drawn from tests of significance--or vice versa. \emph{Journal of the American Statistical Association}, \emph{54}(285), 30--34. \url{https://doi.org/10.2307/2282137}
 
-\leavevmode\vadjust pre{\hypertarget{ref-van_elk_whats_2021}{}}%
+\bibitem[\citeproctext]{ref-vandenakker_effectiveness_2023}
+Van den Akker, O. R., Bakker, M., Assen, M. A. L. M. van, Pennington, C. R., Verweij, L., Elsherif, M., \ldots{} Wicherts, J. (2023, May 10). The effectiveness of preregistration in psychology: {Assessing} preregistration strictness and preregistration-study consistency. \url{https://doi.org/10.31222/osf.io/h8xjw}
+
+\bibitem[\citeproctext]{ref-vandenakker_selective_2023}
+Van den Akker, O. R., van Assen, M. A. L. M., Enting, M., de Jonge, M., Ong, H. H., Rüffer, F., \ldots{} Bakker, M. (2023). Selective {Hypothesis Reporting} in {Psychology}: {Comparing Preregistrations} and {Corresponding Publications}. \emph{Advances in Methods and Practices in Psychological Science}, \emph{6}(3), 25152459231187988. \url{https://doi.org/10.1177/25152459231187988}
+
+\bibitem[\citeproctext]{ref-vanelk_what_2021}
 van Elk, M. (2021). What's hidden in my filedrawer and what's in yours? {Disclosing} non-published findings in the cognitive science of religion. \emph{Religion, Brain \& Behavior}, \emph{11}(1), 5--16. \url{https://doi.org/10.1080/2153599X.2020.1729233}
 
 \end{CSLReferences}
