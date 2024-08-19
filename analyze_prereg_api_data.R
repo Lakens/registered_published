@@ -75,6 +75,23 @@ colnames(res_df) <-  c("reg_id", "reg_date_created", "reg_date_modified", "reg_d
 
 tot_res <- cbind(res_df, author_df)
 
+
+# Assuming your dataframe is named 'df'
+
+# Convert the 'reg_date_created' column to datetime
+tot_res$reg_date_created <- as.POSIXct(tot_res$reg_date_created, format="%Y-%m-%dT%H:%M:%OS")
+
+# Filter the dataframe for rows where 'public' is FALSE
+false_df <- subset(tot_res, public == FALSE)
+
+# Find the earliest date
+earliest_date <- min(false_df$reg_date_created)
+
+# Print the result
+print(earliest_date)
+
+
+
 # What is the number of unique parent projects?
 length(unique(res_df$parent_project))
 # 14811

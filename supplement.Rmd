@@ -23,7 +23,7 @@ floatsintext      : yes
 figurelist        : no
 tablelist         : no
 footnotelist      : no
-linenumbers       : no
+linenumbers       : yes
 mask              : no
 draft             : no
 figsintext        : yes
@@ -53,27 +53,6 @@ registration_data_included <- registration_data[which(registration_data$no_resea
 # Details on Classifying Registrations as a Research Study
 
 It can be challenging to determine whether a registration was performed with the goal to publish a study. Sometimes, the description of the registration or project page explicitly revealed that a registration was not an actual research study (for instance, when the group number of the course was shared), or it explicitly linked to a final publication. When it was not clear from the description on the OSF if the registration concerned an actual research study, we searched for information about the researcher(s) on the OSF. If the person who registered the project had various activity points and projects on the OSF, we assumed this person was an active researcher, and not a student. If someone had used the OSF at most a few times since 2017, and did not provide any personal information, we tried to determine if the user was a researcher by searching for scientific publications or membership of research groups (e.g. profiles on institutional websites). If such information could be found, the registration was coded as an actual research study. If such information could not be found, the registration was marked as “no research study” (e.g., it was assumed to be a student assignment). In the case of multiple researchers, it is possible that only a subgroup of the researchers could be found. If only one of the researchers seemed to be a real researcher, we assumed that the registration was part of a student project, where the researcher supervised the other users of the OSF. However, if more than one researcher seemed to be an actual researcher, the registration was marked as an actual research study. These decisions necessarily introduce some arbitrariness in whether a study was intended to be published or not, and therefore we explored whether researchers intended to publish a study when we emailed researchers to follow up on unpublished registrations (see below). As we did not email researchers when we felt confident the registration was not a research study, and as we did not receive replies from all researchers we emailed, the final classification has remaining uncertainty (see the discussion).  
-
-# Details on Classifying Studies as Published or Not
-
-```{r publicationtype}
-# Reason not published ----------------------------------------------------
-
-# It matters if this is done on all registrations we emailed for, or just the ones we ended up including. 
-
-publicationtype <- registration_data_included %>% group_by(classification) %>% summarise(journal = sum(journal_article_after_email == 1), preprint = sum(grey_literature_after_email == 1), thesis = sum(grey_literature_after_email == 2), poster = sum(grey_literature_after_email == 3), report = sum(grey_literature_after_email == 4), conference = sum(grey_literature_after_email == 5))
-publicationtype[3,] <- publicationtype[1,] + publicationtype[2,]
-publicationtype <- as.data.frame(publicationtype[,-1])
-rownames(publicationtype) <- c("Manually Opened", "Automatically Opened", "Total")
-colnames(publicationtype) <- c("Journal Article", "Preprint", "PhD Thesis", "Poster", "Report", "Conference Proceeding")
-
-apa_table(t(publicationtype), digits = 0, caption = "Type of document that matched the registration for all registrations that were publicly shared")
-
-```
-
-For each registration, we first searched for the combination of the title of the registration and the names of the researchers in Google Scholar and examined the search results. We considered the registration published if it appeared as a journal article, preprint, PhD thesis in a repository, an online report, or conference proceedings. The frequency of each publication type is provided in Table \@ref(tab:publicationtype). When a publication with a similar title was identified, the publication was downloaded and we determined if the publication matched the topic of the registration, was published after the registration date on the OSF, and the OSF users on the registration at least partly overlapped with the researchers of the publication. We also searched the publication for a link to an OSF project page that was associated with the registration. If the publication indeed seemed to be about the same topic and was published after the registration date on the OSF, the study was marked as publicly shared. 
-
-Because titles of the registrations and papers often do not match we continued our search based on the names of the OSF users. For each user associated with a registration we retrieved a list of their publications and scanned through their publications after the registration date. If a document similar to the topic of the registration or in collaboration with some of the other OSF users associated with the registration was found, we again aimed to determine if the publication matched the registration. Whenever we failed to find a publication that seemed to be related to a registration the registration was marked as “not publicly shared” in any of the document types outlined above.  
 
 # Details on Extrapolating to the Population
 
