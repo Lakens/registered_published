@@ -17,7 +17,7 @@ affiliation:
 authornote: |
   This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research and with the support of the Ammodo Science Award 2023 for Social Sciences. A computationally reproducible manuscript is available at https://github.com/Lakens/registered_published and data and materials on https://osf.io/8uqfb/. We are grateful to Stephen Lindsay, Cristian Mesquida Caldentey, Henry Wyneken, and Gerda Wyssen for feedback on a draft. 
 abstract: |
-  We quantified how many studies registered on the Open Science Framework (OSF) up to November 2017 are performed but not shared after at least 4 years. Examining a sample of 169 registered research studies we found that 104 (61.3%) were publicly shared. We estimate that 5550 out of 9544 (58.2%) registered studies on the OSF are publicly shared. Researchers use registries to make unpublished studies public, and the OSF policy to open registrations after a four year embargo substantially increases the number of studies that become known to the scientific community. In responses to emails asking researchers why studies remained unpublished logistical issues (e.g., lack of time, researchers changing jobs) were the most common cause, followed by null results, and rejections during peer review. Our exploratory study shows that a substantial amount of studies that researchers perform remain unpublished.
+  We quantified how many studies registered on the Open Science Framework (OSF) up to November 2017 are performed but not shared after at least 4 years. Examining a sample of 169 registered research studies we found that 104 (61.3%) were publicly shared. We estimate that 5316 out of 9,172 (58%) registered studies on the OSF are publicly shared. Researchers use registries to make unpublished studies public, and the OSF policy to open registrations after a four year embargo substantially increases the number of studies that become known to the scientific community. In responses to emails asking researchers why studies remained unpublished logistical issues (e.g., lack of time, researchers changing jobs) were the most common cause, followed by null results, and rejections during peer review. Our exploratory study shows that a substantial amount of studies that researchers perform remain unpublished.
   
 keywords          : "File Drawer; Registries; Research Waste; Scientific Publication"
 wordcount         : "4501"
@@ -94,7 +94,7 @@ total_closed <- sum(res_df$project_id == "NA") - sum(res_df$reg_withdrawn == TRU
 total_closed
 # Total open 8008
 total_open <- sum(res_df$project_public == TRUE)
-total_open
+# total_open
 
 ```
 
@@ -141,7 +141,7 @@ table(registration_data_included$published_before_email)
 excl_table <- as.data.frame(registration_data %>% group_by(classification) %>% summarise_at(c("withdrawn", "no_research_study", "no_unique_study", "no_preregistration", "registered_report", "replication_project"), sum))[,2:7]
 rownames(excl_table) <- c("Manually Opened", "Automatically Opened")
 colnames(excl_table) <- c("Withdrawn", "No Research Study", "No Unique Study", "No Registration", "Registered Report", "Replication Project")
-excl_table
+# excl_table
 # Note that the sum in this table is higher than the total number of excluded registrations because an individual registration can be excluded for multiple reasons.
 
 ```
@@ -158,15 +158,7 @@ excl_table
 knitr::include_graphics("./PRISMA.pdf")
 ```
 
-The number of included registrations in the sample is summarized in Table \@ref(tab:table-included). We originally included `r sum(included_before$sum_before)` registrations. After excluding `r sum(included_before$sum_before) - sum(included_after$sum_after)` registrations based on email responses for being student projects, performed without the goal of publishing the data, or part of a multi-lab project, our final sample size consists of `r sum(included_after$sum_after)` registrations. Of these, `r included_after$sum_after[1]` registrations were categorized as manually opened and `r included_after$sum_after[2]` registrations were categorized as automatically opened.  An overview of how often registrations were excluded for each of the 6 inclusion criteria is provided in Table \@ref(tab:table-excluded). 
-
-```{r table-included, echo = FALSE}
-apa_table(included_table, digits = 0, caption = "Studies included in the analysis before and after e-mailing researchers.")
-```
-
-```{r table-excluded, echo = FALSE}
-apa_table(t(excl_table), digits = 0, caption = "Reasons studies were excluded from the analysis.", note = "The sum is greater than the total number of excluded registrations because an individual registration can be excluded for multiple reasons.")
-```
+The number of included registrations in the sample is summarized in Figure \@ref(tab:PRISMA). We originally included `r sum(included_before$sum_before)` registrations. After excluding `r sum(included_before$sum_before) - sum(included_after$sum_after)` registrations based on email responses for being student projects, performed without the goal of publishing the data, or part of a multi-lab project, our final sample size consists of `r sum(included_after$sum_after)` registrations. Of these, `r included_after$sum_after[1]` registrations were categorized as manually opened and `r included_after$sum_after[2]` registrations were categorized as automatically opened.  An overview of how often registrations were excluded for each of the 6 inclusion criteria is provided in Figure \@ref(tab:PRISMA).
 
 *Identifying Publications Corresponding to Registrations*: We attempted to find a publication (e.g., a journal article, preprint, thesis, or scientific poster) associated with each registration included in the analysis. Ideally, it is possible to find a publication associated with a registration without the help of the researchers who performed the study. In practice, due to the often limited information included in a registration on the OSF, information provided by the researchers improved our ability to classify registrations as publicly shared or not. If a publication could be found that provided a direct link to the OSF we could be certain that we found the publication corresponding to the registration. In many cases, especially when registrations on the OSF contained little information (see the supplement for details on how much information registrations contained), and publications did not link to a registration on the OSF, there was some uncertainty about whether a paper corresponded to a registration. Furthermore, if no publication could be found, it remains uncertain if the study was not publicly shared (a true negative) or if we failed to find it (a false negative). 
 
@@ -182,7 +174,7 @@ publicationtype <- as.data.frame(publicationtype[,-1])
 rownames(publicationtype) <- c("Manually Opened", "Automatically Opened", "Total")
 colnames(publicationtype) <- c("Journal Article", "Preprint", "PhD Thesis", "Poster", "Report", "Conference Proceeding")
 
-apa_table(t(publicationtype), digits = 0, caption = "Type of document that matched the registration for all registrations that were publicly shared")
+apa_table(t(publicationtype), digits = 0, caption = "Type of document that matched the registration for all projects that were publicly shared")
 
 ```
 
@@ -391,7 +383,7 @@ result_population <- binom.confint(x = estimated_nonpublication[3,6], n = (estim
 
 colnames(estimated_nonpublication) <- c("Group", "Registrations", "% Included", "Included", "% Published", "Published", "Not Published")
 
-apa_table(longtable = TRUE, landscape = TRUE, estimated_nonpublication, digits = 0, caption = "Descriptives for the sampled registrations, and estimated number of published and unpublished studies registered on the OSF before November 2017.")
+apa_table(longtable = TRUE, landscape = TRUE, estimated_nonpublication, digits = 0, caption = "Descriptives for the sampled registrations, and estimated number of published and unpublished projects registered on the OSF before November 2017.")
 
 ```
 
