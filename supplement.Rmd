@@ -15,7 +15,7 @@ affiliation:
   - id            : "1"
     institution   : "Eindhoven University of Technology"
 authornote: |
-  This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research. The computationally reproducible version of this manuscript is available at https://github.com/Lakens/registered_published and additional materials on https://osf.io/8uqfb/.
+    This work was funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research and with the support of the Ammodo Science Award 2023 for Social Sciences. A computationally reproducible manuscript is available at https://github.com/Lakens/registered_published and data and materials arre available at https://osf.io/8uqfb/. We are grateful to Stephen Lindsay, Cristian Mesquida Caldentey, Henry Wyneken, and Gerda Wyssen for feedback on a draft, and Olmo van den Akker and an anonymous reviewer for their helpful reviews.
 abstract: |
   This supplement provides additional details on the classification of registrations as research studies or not, the classification of studies as published or not, the calculations to extrapolate from our sample to the population of registrations on the OSF before November 2017, additional analyses about how extensive registrations were, and a more fine-grained overview of reasons researchers provided not to publish their study. 
   
